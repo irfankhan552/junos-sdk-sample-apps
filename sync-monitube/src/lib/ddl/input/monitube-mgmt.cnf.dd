@@ -1,0 +1,328 @@
+/*
+ * $Id: monitube-mgmt.cnf.dd,v 1.3.246.1 2009-08-13 05:06:09 kdickman Exp $
+ *
+ * monitube-mgmt.cnf.dd - monitube mgmt process configuration
+ *
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_MONITUBE_MGMT "monitube-mgmt"
+#define MONITUBE_MGMT_STRLEN 255
+
+daemon-names monitube-mgmt;
+require-names sync-monitube;
+
+object sampling_output_type {
+    flag allow-struct;
+    object interface {
+        define SAMPLING_OUTPUT_INTERFACE;
+        /* this is a list */
+        
+        /*
+        attribute interface {
+            // list item identifier
+            type interface-device;
+            notify monitube-mgmt;
+        }
+        */
+    }
+    
+    object extension-service {
+        define SAMPLING_EXT_SERVICE;
+        /* this is a list */
+        
+        /*
+        attribute service-name {
+            // list item identifier
+            type ranged string 1 .. 63;
+        }
+        */
+    }
+}
+
+object sampling_instance_inet_global_output_type {
+    flag allow-struct;
+    object interface {
+        define SAMPLING_GLOBAL_INST_OUTPUT_INTERFACE;
+        /* this is a list */
+        
+        /*
+        attribute interface {
+            // list item identifier
+            type interface-device;
+            notify monitube-mgmt;
+        }
+        */
+    }
+    
+    object extension-service {
+        define SAMPLING_GLOBAL_INST_EXT_SERVICE;
+        /* this is a list */
+        
+        /*
+        attribute service-name {
+            // list item identifier
+            type ranged string 1 .. 63;
+        }
+        */
+    }
+}
+
+
+object sampling_instance_inet_output_type {
+    flag allow-struct;
+    object interface {
+        define SAMPLING_INST_OUTPUT_INTERFACE;
+        /* this is a list */
+        
+        /*
+        attribute interface {
+            // list item identifier
+            type interface-device;
+            notify monitube-mgmt;
+        }
+        */
+    }
+    
+    object extension-service {
+        define SAMPLING_INST_EXT_SERVICE;
+        /* this is a list */
+        
+        /*
+        attribute service-name {
+            // list item identifier
+            type ranged string 1 .. 63;
+        }
+        */
+    }
+}
+
+
+object juniper-sampling-options {
+    flag allow-struct;
+    
+    object output {
+        define DDLAID_FWD_OPTS_SAMPLING_OUPUT;
+        type sampling_output_type;
+        hidden deprecated; /* DEPRECATED in 9.6 */
+    }
+    
+    /* Global sampling instance */
+    
+    object family {
+        define SAMPLING_FAMILY;
+        object inet {  /* we only support/need inet with monitube */
+            define SAMPLING_FAMILY_INET;
+            object output {
+                define GLOBAL_INSTANCE_OUTPUT;
+                type sampling_instance_inet_global_output_type;
+            }
+        }
+    }
+    
+    /* Per-PFE instances */
+    
+    object instance {
+        define SAMPLING_INSTANCE;
+        flag allow-struct;
+        /* this is a list */
+        
+        /*
+        attribute instance_name {
+            // list item identifier
+            define SAMPLING_INSTANCE_NAME;
+            type string;
+        }
+        */
+        
+	    object family {
+	        define SAMPLING_INSTANCE_FAMILY;
+	        object inet {
+	            define SAMPLING_INSTANCE_FAMILY_INET;
+		        object output {
+		            define SAMPLING_INSTANCE_OUTPUT;
+		            type sampling_instance_inet_output_type;
+		        }
+	        }
+	    }
+    }
+}
+
+object juniper-forwarding-options {
+    object sampling {
+        define DDLAID_FWD_OPTS_SAMPLING;
+        type juniper-sampling-options;
+    }
+}
+
+object juniper-config {
+
+    /* This is here for demo purposes, but not used in this app currently */
+    object forwarding-options {
+        define DDLAID_FWD_OPTS;
+        type juniper-forwarding-options;
+    }
+    
+    /*
+     * Traceoptions configuration goes somewhere else under /sync:
+     */
+    object sync {
+        help "SDK Your Net Corp. application information";
+        define DDLAID_SYNC;
+        flag remove-empty;
+        
+        object monitube {
+        
+            help "Configure SYNC Monitube general options";
+            define DDLAID_SYNC_MONITUBE;
+            flag remove-empty;
+            notify monitube-mgmt;
+            
+	        object monitor {
+	            help "A monitor";
+	            define MONITOR;
+	            
+	            /*
+	             * NOTE: DELTA-LIST is needed for lists which we want  
+	             * to walk using dax_walk_list with the DAX_WALK_DELTA 
+	             *  parameter. This way we know about deletes.
+	             */
+	            flag remove-empty setof list delta-list;
+	            
+	            require sync-monitube;
+	                               
+	            /* init the mgmt daemon if this config exists */
+	            
+	            action enable-process DNAME_MONITUBE_MGMT;
+	            notify monitube-mgmt;
+	       
+	            attribute monitor-name {
+	                help "Monitor name";
+	                flag nokeyword identifier;
+	                type ranged string 1 .. MONITUBE_MGMT_STRLEN;
+	            }
+	        
+	            attribute rate {
+	                help "Media drain rate in bits per second";
+	                type ranged uint 10000 .. 1000000000;
+	                flag mandatory;
+	            }
+	        
+	            object monitored-networks {
+	                help "The group of monitored addresses";
+	                define DDLAID_MONITORED_NETWORKS;
+	                
+	                flag mandatory;
+	                flag homogeneous setof list autosort delta-list;
+	                max-elements 100;
+	                
+	                attribute address {
+	                    help "An address prefix";
+	                    flag identifier nokeyword;
+	                    type ipv4prefix-mandatory;
+	                }
+	            }
+	        }
+	        
+	        object mirror {
+	        
+	            help "A mirror";
+	            define MIRROR;
+	            
+	            flag remove-empty setof list delta-list;
+	            
+	            require sync-monitube;
+	                               
+	            /* init the mgmt daemon if this config exists */
+	            
+	            action enable-process DNAME_MONITUBE_MGMT;
+	            notify monitube-mgmt;
+	       
+	            attribute mirrored-address {
+	                help "Original destination of flow to mirror";
+	                flag nokeyword identifier;
+	                type ipv4addr;
+	            }
+	        
+	            attribute destination {
+	                help "The destination to mirror to location";
+	                type ipv4addr;
+	                flag mandatory;
+	            }                    
+	        }
+	        
+	        attribute replication-interval {
+	            help "Flow state replication interval";
+	            type ranged ubyte 1 .. 60;
+	            require sync-monitube;
+	            default 3;
+                hidden deprecated; /* DEPRECATED in 9.6 */
+	            must(any ".. mirror <*>" || any ".. monitor <*>");
+	            must-message "A mirror or monitor must also be configured at minimum";
+	        }
+            
+            /*
+             * Trace options configuration:
+             */
+            object traceoptions {
+                help "Monitube trace options";
+                flag remove-empty;
+                require trace sync-monitube;
+                
+	            must(any ".. mirror <*>" || any ".. monitor <*>");
+	            must-message "A mirror or monitor must also be configured at minimum";
+            
+                /* From trace_include.dd */
+                
+                TRACEOPTIONS_FILE;
+                
+                SYSLOG_ATTRIBUTE;
+                
+                /* Types of trace messages generated by monitube-mgmt */
+    
+                object "flag" {
+                    help "Tracing flag parameters";
+                    flag setof list oneliner;
+    
+                    attribute flag-name {
+                        flag identifier nokeyword;
+                        type enum uint {
+                            choice normal {
+                                help "Trace normal events";
+                                define MONITUBE_TRACEFLAG_NORMAL;
+                            }
+                            choice kcom {
+                                help "Trace kcom events";
+                                define MONITUBE_TRACEFLAG_KCOM;
+                            }
+                            choice connection {
+                                help "Trace connection events";
+                                define MONITUBE_TRACEFLAG_CONNECTION;
+                            }
+                            choice configuration {
+                                help "Trace configuration events";
+                                define MONITUBE_TRACEFLAG_CONF;
+                            }
+                            choice "all" {
+                                help "Trace everything";
+                                define MONITUBE_TRACEFLAG_ALL;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

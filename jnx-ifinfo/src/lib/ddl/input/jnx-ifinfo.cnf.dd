@@ -1,0 +1,90 @@
+/*           
+ * $Id: jnx-ifinfo.cnf.dd,v 1.3 2008-03-04 01:36:58 sbattu Exp $  
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 1998-2003, 2005-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_JNX_IFINFOD "jnx-ifinfod"
+
+daemon-names jnx-ifinfod;
+require-names jnx-ifinfo;
+
+object juniper-config {
+    flag no-struct;
+
+    object jnx-ifinfo {
+        help "Ifinfod service configuration";
+        flag remove-empty;
+        notify jnx-ifinfod;
+        define DDLAID_JNX_IFINFO;
+        require jnx-ifinfo;
+
+        action enable-process DNAME_JNX_IFINFOD;
+
+        object traceoptions {
+            help "Ifinfo service traceoptions";
+            require trace;
+            flag remove-empty;
+
+            TRACEOPTIONS_FILE;
+    
+            object "flag" {
+                help "Tracing parameters";
+                flag setof list;
+                flag oneliner;
+                define DDLAID_JNX_IFINFO_TRACEFLAG;
+
+                attribute flag-name {
+                    flag identifier nokeyword;
+                    type enum uint {
+                        choice configuration {
+                            help "Trace configuration events";
+                            define JNX_IFINFOD_TRACEFLAG_CONFIG;
+                        }
+                        choice routing-socket {
+                            help "Trace routing socket events";
+                            define JNX_IFINFOD_TRACEFLAG_RTSOCK;
+                        }
+			choice connection {
+			    help "Trace connection events";
+			    define JNX_IFINFOD_TRACEFLAG_CONN;
+			}
+                        choice "all" {
+                            help "Trace all events";
+                            define JNX_IFINFOD_TRACEFLAG_ALL;
+                        }
+                    }
+                }
+    	    }
+    }
+    object interfaces {
+        require interface;
+        flag remove-empty homogeneous;
+        help "Ifinfo Interface configuration";
+        type setof interface_types;
+          }
+    }
+}
+object interface_types {
+    help "Ifinfo Physical interface";
+    attribute interface_name {
+        flag identifier nokeyword mustquote;
+        type interface-unit;
+        help "Ifinfo Interface name";
+        cname "ifinfo_intf_name";
+    }               
+    attribute alias-name {
+        type string;
+        cname "ifinfo_alias";
+        help "Alias name for this interface config";
+    }
+}

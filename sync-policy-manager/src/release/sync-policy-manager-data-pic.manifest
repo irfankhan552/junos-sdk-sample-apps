@@ -1,0 +1,13 @@
+# $Id: sync-policy-manager-data-pic.manifest 346460 2009-11-14 05:06:47Z ssiano $
+#
+# Copyright (c) 2007-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+#        Name: pfd
+# Description: SYNC Policy Manager sample: Packet filter (data component)
+#        Type: Data application (and start up configuration)
+#     Runs on: MS PIC
+#
+%TOPDIR%/../obj-xlr/sbin/pfd/pfd store=opt/sdk/sbin/pfd mode=555
+%TOPDIR%/etc/pfd.conf store=var/etc/init.dir/pfd.conf mode=444
+

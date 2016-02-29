@@ -1,0 +1,15 @@
+<junos-package>
+    <type>SDK_PKG_RE</type>
+    <title>JUNOS SDK JNX-FLOW Management Component</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>Juniper Networks, Inc.</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>
+This package contains SDK JNX-FLOW mangement component</description>
+    <has-ddl/>
+    <has-daemon>jnx-flow-mgmt</has-daemon>
+    <kill-daemon>jnx-flow-mgmt</kill-daemon>
+</junos-package>

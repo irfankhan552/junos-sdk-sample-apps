@@ -1,0 +1,34 @@
+<!--
+ $Id$
+
+ This code is provided as is by Juniper Networks SDK Developer Support.
+ It is provided with no warranties or guarantees, and Juniper Networks
+ will not provide support or maintenance of this code in any fashion.
+ The code is provided only to help a developer better understand how
+ the SDK can be used.
+
+ Copyright (c) 2007-2008, Juniper Networks, Inc.
+ All rights reserved.
+-->
+<sdk-bundle>
+  <daemon-table>
+    <default-package>sync-hellopics-apps-mgmt</default-package>
+
+    <daemon-entry>
+      <name>hellopics-mgmt</name>
+      <ui-name>sync-hellopics-mgmt-service</ui-name>
+      <binary>INSTALLDIR/sbin/hellopics-mgmt</binary>
+      <description>SDK Your Net Corp. Hellopics example management process</description>
+      <system-process-failover acceptable="exclude"/>
+      <optional/>
+      <checkconf/>
+      <!-- runs on both master and backup REs when installed on both -->
+      <mode-protocol-master/>
+      <mode-protocol-backup/>
+      <run-if-configured/>
+      <noversion/>
+    </daemon-entry>
+
+  </daemon-table>
+</sdk-bundle>
+

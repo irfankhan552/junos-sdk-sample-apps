@@ -1,0 +1,14 @@
+<junos-package>
+    <type>SDK_PKG_RE</type>
+    <title>SDK Your Net Corp. Monitube2 IPTV Monitoring Example Management Component</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>SDK Your Net Corp. (phony example co.)</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>This package contains the SYNC Monitube2 IPTV Monitoring Management Component</description>
+    <has-ddl/>
+    <has-daemon>monitube2-mgmt</has-daemon>
+    <kill-all-daemons/>
+</junos-package>

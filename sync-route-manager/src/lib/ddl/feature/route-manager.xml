@@ -1,0 +1,44 @@
+<!--
+ $Id$
+
+ This code is provided as is by Juniper Networks SDK Developer Support.
+ It is provided with no warranties or guarantees, and Juniper Networks
+ will not provide support or maintenance of this code in any fashion.
+ The code is provided only to help a developer better understand how
+ the SDK can be used.
+ 
+ Copyright (c) 2010, Juniper Networks, Inc.
+ All rights reserved.
+
+-->
+<sdk-bundle>
+
+    <daemon-table>
+        <default-package>route-manager</default-package>
+
+        <daemon-entry>
+            <name>route-manager</name>
+            <ui-name>route-manager</ui-name>
+            <binary>INSTALLDIR/sbin/route-manager</binary>
+            <description>SDK Your Net Corp. Route Manager process</description>
+            <system-process-failover acceptable="exclude"/>
+            <optional/>
+            <checkconf/>
+            <mode-protocol-master/>
+            <run-if-configured/>
+            <noversion/>
+        </daemon-entry>
+
+    </daemon-table>
+
+    <require-table>
+        <require-entry>
+            <name>route-manager</name>
+            <help>SDK Your Net Co. Route Manager configuration</help>
+            <configure/>
+            <view/>
+        </require-entry>
+    </require-table>
+
+</sdk-bundle>
+

@@ -1,0 +1,13 @@
+# $Id: jnx-flow-data-pic.manifest 346460 2009-11-14 05:06:47Z ssiano $
+#
+# Copyright (c) 2007-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+#        Name: jnx-flow-data
+# Description: Demonstration of flow tracking using the RE and MP SDK (data component)
+#        Type: Data application
+#     Runs on: MS PIC
+#
+%TOPDIR%/../obj-xlr/sbin/jnx-flow-data/jnx-flow-data store=opt/sdk/sbin/jnx-flow-data mode=555
+%TOPDIR%/etc/jnx-flow-data.conf store=/var/etc/init.dir/jnx-flow-data.conf mode=444
+

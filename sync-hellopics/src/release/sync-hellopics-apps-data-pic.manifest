@@ -1,0 +1,13 @@
+# $Id: sync-hellopics-apps-data-pic.manifest 346460 2009-11-14 05:06:47Z ssiano $
+#
+# Copyright (c) 2007-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+#        Name: hellopics-data
+# Description: SYNC Hellopics sample RE to Multiservice PIC IPC demo
+#        Type: Data application (and start up configuration)
+#     Runs on: MS PIC
+#
+%TOPDIR%/../obj-xlr/sbin/hellopics-data/hellopics-data store=opt/sdk/sbin/hellopics-data mode=555
+%TOPDIR%/etc/hellopics-data.conf store=var/etc/init.dir/hellopics-data.conf mode=444
+

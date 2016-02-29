@@ -1,0 +1,197 @@
+/*
+ * $Id: jnx-gateway-mgmt.cmd.dd,v 1.4 2008-02-29 03:13:14 taoliu Exp $
+ *
+ * jnx-gateway.cmd.dd - jnx gateway operational commands
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 1998-2003, 2005-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+
+#include "common_include.dd" 
+#include "trace_include.dd"
+
+#define DNAME_JNX_GATEWAYD "jnx-gateway-mgmt"
+
+require-names jnx-gateway-mgmt;
+
+command juniper-command {
+
+	command show {
+
+		command jnx-gateway {
+			help "Show juniper sdk sample gateway service information";
+                        require jnx-gateway-mgmt;
+
+			command statistics {
+				help "Show statistics";
+				xml-name "get-jnx-gateway-information";
+				odl-tag  "jnx-gateway-information";
+				action execute DNAME_JNX_GATEWAYD; 
+
+				argument verbose {
+					flag explicit nokeyword;
+
+					choice summary {
+						help "Display summary output";
+					}
+
+					choice extensive {
+						help "Display extensive output";
+					}
+
+					default summary;
+				}
+
+				argument interface-name {
+					type    string;
+					flag    implicit nokeyword;
+					help    "Name of logical interface for the services pic";
+					default "all";
+					option  "INTERFACE";
+#if 0
+					action expand mgd
+						"return mgd_expand_interface_name(daap, IFNF_IFL, 0)";
+#endif
+				}
+
+				argument routing-instance {
+					type    string;
+					help    "Name of routing instance";
+					flag    explicit;
+                                        INSTANCE_NAME_VALIDATE; 
+					default "all";
+					option  "INSTANCE";
+				}
+
+				choice tunnel-type {
+
+					argument grekey {
+						type    uint;
+						help    "Generic routing encapsulation key";
+						option  "GRE";
+					}
+
+					argument gateway {
+						type    string;
+						help    "IP address or ID of the ipip gateway";
+						option  "IPIP";
+					}
+				}
+			}
+
+			command gre-tunnels {
+				help    "Show gre session tunnels";
+				xml-name "get-jnx-gateway-gre-information";
+				odl-tag  "jnx-gateway-gre-information";
+				action execute DNAME_JNX_GATEWAYD; 
+
+				argument verbose {
+					flag explicit nokeyword;
+
+					choice summary {
+						help "Display summary output";
+					}
+
+					choice extensive {
+						help "Display extensive output";
+					}
+
+					default summary;
+				}
+
+				argument interface-name {
+					type    string;
+					flag    explicit nokeyword;
+					help    "Name of logical interface for the services pic";
+					default "all";
+					option  "INTERFACE";
+#if 0
+					action expand mgd
+						"return mgd_expand_interface_name(daap, IFNF_IFL, 0)";
+#endif
+				}
+
+				argument routing-instance {
+					type    string;
+					help    "Name of routing instance";
+					flag    explicit;
+                                        INSTANCE_NAME_VALIDATE; 
+					default "all";
+					option  "INSTANCE";
+				}
+
+				argument gateway {
+					type    string;
+					help    "IP address or ID of the gateway";
+					flag    explicit;
+					default "all";
+					option  "GATEWAY";
+				}
+			}
+
+			command ipip-tunnels {
+				help    "Show ipip-tunnels";
+				xml-name "get-jnx-gateway-ipip-information";
+				odl-tag  "jnx-gateway-ipip-information";
+				action execute DNAME_JNX_GATEWAYD;
+
+				argument verbose {
+					flag explicit nokeyword;
+
+					choice summary {
+						help "Display summary output";
+					}
+
+					choice extensive {
+						help "Display extensive output";
+					}
+
+					default summary;
+				}
+
+				argument interface-name {
+					type   string;
+					flag   implicit nokeyword;
+					help   "Name of logical interface for the services pic";
+					option  "INTERFACE";
+#if 0
+					action expand mgd
+						"return mgd_expand_interface_name(daap, IFNF_IFL, 0)";
+#endif
+				}
+
+				argument routing-instance {
+					type    string;
+					help    "Name of routing instance";
+					flag    explicit;
+                                        INSTANCE_NAME_VALIDATE; 
+					default "all";
+					option  "INSTANCE";
+				}
+			}
+
+			command user-profiles {
+				help    "Show user profile policies";
+				xml-name "get-jnx-gateway-user-information";
+				odl-tag  "jnx-gateway-user-information";
+				action execute DNAME_JNX_GATEWAYD;
+
+				argument policy {
+					type    string;
+					help    "Name of the user-profile";
+					flag    explicit nokeyword;
+					default "all";
+					option  "POLICY";
+				}
+			}
+
+		}
+	}
+}

@@ -1,0 +1,15 @@
+<junos-package>
+    <type>SDK_PKG_RE</type>
+    <title>SDK Your Net Corp. Equilibrium II Load Balancer Example Management Component</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>SDK Your Net Corp. (phony example co.)</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>
+This package contains the SYNC Equilibrium II Load Balancer Management Component</description>
+    <has-ddl/>
+    <has-daemon>equilibrium2-mgmt</has-daemon>
+    <kill-all-daemons/>
+</junos-package>

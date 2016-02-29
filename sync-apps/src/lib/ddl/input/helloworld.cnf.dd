@@ -1,0 +1,51 @@
+/*
+ * $Id: helloworld.cnf.dd,v 1.3 2008-02-29 03:13:14 taoliu Exp $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+#include "common_include.dd"
+
+#define DNAME_HELLOWORLDD "helloworldd"
+
+daemon-names helloworldd;
+
+object juniper-config {
+    flag no-struct;
+
+    object sync {
+        help "SDK Your Net Corp. application information";
+        flag remove-empty;
+        define DDLAID_SYNC;
+        
+        object helloworld {
+            help "Hello world information";
+            flag remove-empty;
+            notify DNAME_HELLOWORLDD;
+            define DDLAID_SYNC_HELLOWORLD;
+
+            /* init helloworldd daemon if this config exists */
+            action enable-process DNAME_HELLOWORLDD;
+            
+            object message {
+                help "A message to display";
+                flag remove-empty;
+                define DDLAID_SYNC_HELLOWORLD_MESSAGE;
+
+                attribute message_contents {
+                    flag nokeyword;
+                    type string;
+                    cname "helloworld_message_contents";
+                    help "Message contents";
+                }
+            }
+        }
+    }
+}

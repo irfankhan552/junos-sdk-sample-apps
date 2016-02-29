@@ -1,0 +1,218 @@
+/*
+ * $Id: pe.cnf.dd,v 1.4 2008-02-29 03:13:14 taoliu Exp $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_PED "ped"
+
+daemon-names ped;
+
+object juniper-config {
+    flag no-struct;
+
+    object sync {
+        help "SDK Your Net Corp. application information";
+        flag remove-empty;
+        define DDLAID_SYNC;
+        
+        object policy-enforcement {
+            help "Policy Enforcement information";
+            flag remove-empty;
+            notify DNAME_PED;
+            define DDLAID_SYNC_PE;
+
+            /* init ped daemon if this config exists */
+            action enable-process DNAME_PED;
+            
+            attribute captive-portal-address {
+                help "Captive portal address route with /32 mask";
+                type ipv4prefix;
+                cname "cpd_address";
+                
+                must (" .. packet-filter-nat-interface" && 
+                      " .. packet-filter-address" &&
+                      " .. packet-filter-interface");
+                must-message "The packet-filter-interface, packet-filter-nat-interface, and packet-filter-address attributes must also be configured when this attribute is present";
+                
+                must (any "interfaces <*> unit <*> family inet address $$");
+                must-message "The captive portal's address must be configured on an interface";
+                
+                path-reference "interfaces <*> unit <*> family inet address";
+            }
+            
+            attribute packet-filter-address {
+                help "Packet filter address";
+                type ipv4addr;
+                cname "pfd_address";
+                
+                must (" .. packet-filter-nat-interface" && 
+                      " .. packet-filter-interface" &&
+                      " .. captive-portal-address");
+                must-message "The packet-filter-nat-interface, packet-filter-interface, and captive-portal-address attributes must also be configured when this attribute is present";
+            }
+            
+            attribute packet-filter-interface {
+                help "Packet filter's logical interface (IFL) for receiving traffic";
+                type interface-unit;
+                cname "pfd_interface";
+
+                match "^ms-";
+                match-message "Only Multi-Service PIC interfaces are supported";
+
+                must (" .. packet-filter-nat-interface" && 
+                      " .. packet-filter-address" &&
+                      " .. captive-portal-address");
+                must-message "The packet-filter-nat-interface, packet-filter-address, and captive-portal-address attributes must also be configured when this attribute is present";
+                
+                must(!" .. packet-filter-nat-interface $$");
+                must-message "Cannot be the same interface as the packet-filter-nat-interface";
+            }
+            
+            attribute packet-filter-nat-interface {
+                help "Packet filter's logical interface (IFL) for sending traffic requiring NAT to the captive portal";
+                type interface-unit;
+                cname "pfd_nat_interface";
+
+                match "^ms-";
+                match-message "Only Multi-Service PIC interfaces are supported";
+
+                must (" .. packet-filter-interface" && 
+                      " .. packet-filter-address" &&
+                      " .. captive-portal-address");
+                must-message "The packet-filter-interface, packet-filter-address, and captive-portal-address attributes must also be configured when this attribute is present";
+
+                must(!" .. packet-filter-interface $$");
+                must-message "Cannot be the same interface as the packet-filter-interface";
+            }
+            
+            
+            object condition {
+                help "Interface matching condition";
+                flag remove-empty setof list;
+                define DDLAID_SYNC_PE_CONDITION;
+
+                attribute condition-name {
+                    flag nokeyword identifier;
+                    type string;
+                    cname "policy_condition_name";
+                    help "Condition name";
+                }
+
+                attribute interface {
+                    help "Interface name matching expression";
+                    cname "policy_interface_name";
+                    type string;
+                }
+
+                attribute family {
+                    help "Interface protocol family";
+                    cname "policy_family";
+                                        
+                    type enum ubyte {
+                        choice "any" {
+                            help "Any protocol";
+                            value 0;  /* AF_UNSPEC */
+                            define DDL_AF_UNSPEC;
+                        }
+                        choice inet {
+                            help "IPv4";
+                            value 2; /* AF_INET */
+                            define DDL_AF_INET;
+                        }
+                        choice inet6 {
+                            help "IPv6";
+                            value 28;  /* AF_INET6 */
+                            define DDL_AF_INET6;
+                        }
+                    }
+                    default "any";
+                    
+                    must (".. family any" ||
+                         (any "interfaces <*> unit <*> family $$"));
+                    must-message "Protocol family must be configured on at least one interface already or 'any' must be used";
+                }
+            }
+        
+ 
+            /*
+             * Trace options configuration:
+             */
+            object traceoptions {
+                help " Policy Enforcement Daemon trace options";
+                require trace;
+                flag remove-empty;
+            
+                /* From trace_include.dd */
+                
+                TRACEOPTIONS_FILE;
+                
+                SYSLOG_ATTRIBUTE;
+                
+                TRACEOPTIONS_LEVEL_ATTRIBUTE(hidden internal);
+    
+                object "flag" {
+                    help "Tracing flag parameters";
+                    flag setof list;
+                    flag oneliner; /* put name on same line in output */
+    
+                    attribute flag-name {
+                        flag identifier nokeyword;
+                        type enum uint {
+                            choice normal {
+                                help "Trace normal events";
+                                define PED_TRACEFLAG_NORMAL;
+                            }
+                            choice configuration {
+                                help "Trace configuration events";
+                                define PED_TRACEFLAG_CONFIG;
+                            }
+                            choice connection {
+                                help "Trace peer connection events";
+                                define PED_TRACEFLAG_CONNECTION;
+                            }
+                            choice kcom {
+                                help "Trace kcom events";
+                                define PED_TRACEFLAG_KCOM;
+                            }
+                            choice hashtable {
+                                help "Trace hashtable events";
+                                define PED_TRACEFLAG_HT;
+                            }
+                            choice heartbeat {
+                                help "Trace heartbeat events";
+                                define PED_TRACEFLAG_HB;
+                            }
+                            choice filter {
+                                help "Trace filter events";
+                                define PED_TRACEFLAG_FILTER;
+                            }
+                            choice snmp {
+                                help "Trace SNMP events";
+                                define PED_TRACEFLAG_SNMP;
+                            }
+                            choice routing {
+                                help "Trace routing events";
+                                define PED_TRACEFLAG_ROUTING;
+                            }
+                            choice "all" {
+                                help "Trace everything";
+                                define PED_TRACEFLAG_ALL;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,123 @@
+/* 
+ * $Id: jnx-example.odl 346460 2009-11-14 05:06:47Z ssiano $
+ * 
+ * jnx-example.odl - ODL description of example daemon
+ *
+ * Copyright (c) 2005-2007, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+/*
+ * This odl file defines a DTD called junos-jnx-example.dtd
+ */
+dtd junos-jnx-example;
+
+
+tag jnx-example-statistics {
+    flag root;
+    tag cpu-usage {
+        help "CPU utilization (percent)";
+        type int;
+    }
+    tag memory-usage {
+        help "Memory Usage (KBytes)";
+        type int;
+    }
+
+    format jnx-example-statistics-heading-format {
+        header "System Statistics:\\n";
+        indent 2;
+
+        line {
+            field cpu-usage template "CPU Usage: %d%%";
+        }
+        line {
+            field memory-usage template "Memory Usage: %d KB";
+        }
+    }
+
+}
+
+tag jnx-example-data-information {
+    flag root;
+
+    tag jnx-example-data {
+        flag multiple;
+
+        tag jnx-example-data-name {
+            type string;
+            formal-name "Data name";
+            help "Example data identifier";
+        }
+
+        tag jnx-example-data-description {
+            type string;
+            formal-name "Description";
+            help "Example data description";
+        }
+
+        tag jnx-example-data-type {
+            type enum string {
+                choice "none" {
+                    help "No data type";
+                    define JNX_EXAMPLE_DTYPE_NONE;
+                }
+                choice "fat" {
+                    help "Fat data type";
+                    define JNX_EXAMPLE_DTYPE_FAT;
+                }
+                choice "skinny" {
+                    help "Skinny data type";
+                    define JNX_EXAMPLE_DTYPE_SKINNY;
+                }
+            }
+            formal-name "Type";
+            help "Example data type";
+        }
+
+        tag jnx-example-data-value {
+            type string;
+            help "Example data value";
+            formal-name "Value";
+        }
+    }
+
+    style detail {
+        format jnx-example-data-detail-format {
+            fmtflag blank-line;
+            flag leading colon comma space; 
+            indent 0;
+
+            line {
+                field jnx-example-data-name;
+            }
+
+            indent 2;
+            line {
+                field jnx-example-data-type;
+                field jnx-example-data-description;
+            }
+            line {
+                field jnx-example-data-value;
+            }
+        }
+    }
+
+    style brief {
+        format jnx-example-data-brief-format {
+            header "
+ 
+Data name                               Data value
+";
+
+            picture "
+@<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  @<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+";
+
+            line {
+                field jnx-example-data-name;
+                field jnx-example-data-value;
+            }
+        }
+    }
+}

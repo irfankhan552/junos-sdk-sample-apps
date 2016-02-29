@@ -1,0 +1,72 @@
+/* 
+ * $Id: hellopics.odl 346460 2009-11-14 05:06:47Z ssiano $
+ * 
+ * hellopics.odl - ODL description for the output of the hellopics-mgmt daemon
+ *
+ * James Kelly, June 2007
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+/*
+ * This odl file defines a DTD called hellopics.dtd
+ */
+dtd hellopics;
+
+tag hellopics-statistics {
+    flag root;
+    
+    tag cycles-sent {
+        type int;
+        help "The number of messages sent";
+        description "The number of cycle messages sent to the PIC applications";
+        formal-name "Sent Message";
+    }
+    
+    tag cycles-received {
+        type int;
+        help "The number of messages received";
+        description "The number of cycle messages received back from the PIC applications";
+        formal-name "Received Messages";
+    }
+    
+    tag cycles-missed {
+        type int;
+        help "The number of messages dropped somewhere";
+        description "The number of cycle messages dropped somewhere in the cycle";
+        formal-name "Dropped Messages";
+    }
+    
+    tag cycles-out-of-order {
+        type int;
+        help "The number of messages received out-of-order";
+        description "The number of messages received out-of-order (also missed)";
+        formal-name "Missed Messages Received Out of Order";
+    }
+    
+    format stats-format {
+        header "Hello PICs Cycled-Message Statistics:\\n";
+        indent 2;
+        line {
+            field cycles-sent flag leading colon;
+        }
+        line {
+            field cycles-received flag leading colon;
+        }
+        line {
+            field cycles-missed flag leading colon;
+        }
+        line {
+            field cycles-out-of-order flag leading colon;
+        }
+    }
+}
+
+

@@ -1,0 +1,12 @@
+<junos-package>
+    <type>SDK_PKG_PIC</type>
+    <title>JUNOS SDK Gateway Example Control Component</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>Juniper Networks, Inc.</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>
+This package contains SDK gateway example control component</description>
+</junos-package>

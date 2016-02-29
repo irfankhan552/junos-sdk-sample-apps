@@ -1,0 +1,26 @@
+# $Id: sync-ipprobe.manifest 412622 2010-11-25 20:13:29Z builder $
+#
+# Copyright (c) 2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+/set package_id=22 role=Provider_All_Features_Daemon
+#
+#        Name: ipprobe-manager
+# Description: SYNC IPProbe sample: raw socket, statistic and authorization demo (receiving component)
+#        Type: Daemon application
+#     Runs on: Routing Engine
+#
+%TOPDIR%/sbin/ipprobe-manager/ipprobe-manager store=%INSTALLDIR%/sbin/ipprobe-manager mode=555 program_id=1
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-ipprobe-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-ipprobe-dd.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-ipprobe-actions-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-ipprobe-actions-dd.so mode=444
+#
+#        Name: ipprobe
+# Description: SYNC IPProbe sample: raw socket, statistic and authorization demo (sending component)
+#        Type: Command-line application
+#     Runs on: Routing Engine
+#
+%TOPDIR%/sbin/ipprobe/ipprobe store=%INSTALLDIR%/sbin/ipprobe mode=555 program_id=2
+
+# This one is everything in the package for mgd:
+%TOPDIR%/lib/ddl/feature/ipprobe-manager.dml store=opt/lib/dd/%PROVIDER_PREFIX%-ipprobe-manager.dml mode=444
+

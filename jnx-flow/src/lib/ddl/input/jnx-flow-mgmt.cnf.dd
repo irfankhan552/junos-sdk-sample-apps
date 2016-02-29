@@ -1,0 +1,247 @@
+/*
+ * $Id: jnx-flow-mgmt.cnf.dd,v 1.3 2008-02-29 03:13:14 taoliu Exp $ 
+ *
+ * jnx-flow.cnf.dd - jnx-flow package process configuration
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2005-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+#include "common_include.dd" 
+#include "trace_include.dd"
+
+#define DNAME_JNX_FLOWD "jnx-flow-mgmt"
+
+daemon-names jnx-flow-mgmt;
+require-names jnx-flow-mgmt;
+
+#define JNX_FLOW_TRACE_OPTIONS     \
+    choice init { \
+        help "Trace while initializing";\
+        define JNX_FLOW_TRACEFLAG_INIT;\
+    }\
+    choice config { \
+        help "Trace while reading configuration";\
+        define JNX_FLOW_TRACEFLAG_CONFIG;\
+    }\
+    choice events {\
+        help "Trace events";\
+        define JNX_FLOW_TRACEFLAG_EVENT;\
+    }\
+    choice error {\
+        help "Trace error conditions";\
+        define JNX_FLOW_TRACEFLAG_ERR;\
+    }\
+    choice "all" { \
+        help "Trace everything";\
+        define JNX_FLOW_TRACEFLAG_ALL;\
+    }
+
+object jnx-flow-rule-object {
+
+        define DDLAID_JNX_FLOW_RULE;
+
+        attribute rule-name {
+                flag identifier nokeyword;
+                flag mandatory;
+                type ranged string 1 .. 64;
+                help "Jnx-flow rule name";
+                cname "jnx_flow_rule_name";
+        }
+
+        attribute match-direction {
+                help "Direction in which the rule is to be applied";
+
+                type enum int {
+
+                    choice input {
+                        help "Match on input interface";
+                        value 1;
+                    }
+                    choice output {
+                        help "Match on output interface";
+                        value 2;
+                    }
+                }
+                default input;
+        }
+        attribute from {
+                 help "Define match criteria";
+                 flag mandatory;
+                 type jnx-flow-match-object;
+        }
+        
+        attribute then {
+                 help "Define the action";
+
+                 type enum int {
+
+                        choice allow {
+                               help "Allow the packets to pass";
+                               value 1;
+                        }
+                        choice deny {
+                               help "Drop the packets";
+                               value 2;
+                        }
+                 }
+                 default allow;
+        }
+}
+
+object jnx-flow-match-object {
+
+        define DDLAID_JNX_FLOW_MATCH;
+
+        attribute source-prefix {
+                type ipv4prefix;
+                help "Source Prefix for the rule match";
+                cname "jnx_flow_rule_src_addr";
+        }
+
+        attribute destination-prefix {
+                type ipv4prefix;
+                help "Destination prefix for the rule match";
+                cname "jnx_flow_rule_dst_addr";
+        }
+
+        attribute protocol {
+                help "Protocol for the rule match";
+                type enum int {
+
+                        choice icmp {
+                                help "ICMP protocol";
+                                value 1;
+                        }
+                        
+                        choice tcp {
+                                help "TCP protocol";
+                                value 6;
+                        }
+
+                        choice udp {
+                                help "UDP protocol";
+                                value 17;
+                        }
+
+                        choice  "any"{
+                                help "Any protocol";
+                                value 0;
+                        }
+                                
+                }
+                default "any";
+                cname "jnx_flow_rule_proto";
+        }
+
+        attribute source-port {
+                type ushort;
+                help "Source port to match";
+                cname "jnx_flow_rule_src_port";
+                default 0;
+        }
+
+        attribute destination-port {
+                type ushort;
+                help "Destination port to match";
+                cname "jnx_flow_rule_dst_port";
+                default 0;
+        }
+}
+
+object juniper-config {
+
+    flag no-struct;    
+
+    object sdk {
+        flag no-struct;
+        flag remove-empty;
+        help "Mp-sdk application configuration";
+
+        object jnpr {
+                flag no-struct;
+                flag remove-empty;
+                help "Juniper mp-sdk application configuration";
+
+                object jnx-flow {
+                    help "Jnx-flow configuration";
+                    flag remove-empty;
+                    notify DNAME_JNX_FLOWD;
+                    define DDLAID_JNX_FLOW;
+                    require jnx-flow-mgmt;
+
+                    /* This node and its subnodes require jnx-flow-mgmt
+                     * to be up and running */
+
+                    action enable-process DNAME_JNX_FLOWD;
+
+                    attribute rule {
+                        help "Jnx-flow rule configuration";
+                        type  setof jnx-flow-rule-object; 
+                        flag remove-empty;
+                    }
+
+                    attribute syslog {
+                        type toggle;
+                        help "Configure syslog";
+                    }
+
+                    object traceoptions {
+                        help "Trace options for jnx flow";
+                        TRACEOPTIONS_FILE;
+                        object "flag" {
+                            alias traceflag;
+                            help "Tracing parameters";
+                            flag setof list;
+                            flag oneliner;
+                            attribute flag-name {
+                                flag identifier nokeyword;
+                                type enum uint {
+                                    JNX_FLOW_TRACE_OPTIONS;
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    object services {
+         
+       flag no-struct;     
+
+       object service-set {
+
+              notify DNAME_JNX_FLOWD;
+
+              flag no-struct;
+
+              object extension-service {
+                 
+                   flag no-struct;
+
+                   object rules {
+                        help "One or more jnx-flow rules";
+                        flag setof list;
+                        define DDLAID_SVCS_SVC_SET_EXT_SERVICE_RULES;
+
+                        attribute rule-name {
+                            help "Rule name";
+                            flag nokeyword identifier;
+                            type ranged string 1 .. 64;
+                            path-reference "sdk jnpr jnx-flow rule <*>";
+                            must "sdk jnpr jnx-flow rule $$";
+                            must-message "referenced jnx-flow rule must be defined";
+
+                        }
+                    }
+              }
+         }
+    }
+}

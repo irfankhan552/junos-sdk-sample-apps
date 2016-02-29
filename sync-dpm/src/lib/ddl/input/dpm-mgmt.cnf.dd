@@ -1,0 +1,281 @@
+/*
+ * $Id: dpm-mgmt.cnf.dd,v 1.1 2008-06-19 19:06:48 jamesk Exp $
+ *
+ * dpm-mgmt.cnf.dd - DPM's mgmt process configuration
+ *
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+daemon-names dpm-mgmt;
+
+#define DNAME_DPM_MGMT "dpm-mgmt"
+#define DPM_MGMT_STRLEN 255
+
+#define MIN_BW 32000ULL
+#define MAX_BW 40000000000ULL
+#define MIN_BURST 1500ULL
+#define MAX_BURST 100000000000ULL
+#define PERCENT_MIN_BW 1
+#define PERCENT_MAX_BW 100
+
+#define FW_NAME_LEN_CHECK                                            \
+    match "!^((__.*)|(.{64,}))$";                                    \
+    match-message "Must be a non-reserved string of 63 characters or less";
+
+object firewall_policer_subset_type {
+    help "Define a policer";
+    define DDLAID_POL;
+
+    attribute policer-name {
+        flag nokeyword identifier;
+        type string;
+        help "Policer name";
+        FW_NAME_LEN_CHECK;
+    }
+
+    object if-exceeding {
+        define DDLAID_POL_IF_EXCEEDING;
+        help "Define rate limits";
+        choice bandwidth {
+            flag nokeyword;
+
+            attribute bandwidth-limit {
+                type ranged uint64 MIN_BW .. MAX_BW; 
+                flag k1000;
+                units "bits per second";
+                help "Bandwidth limit";
+            }
+
+            attribute bandwidth-percent {
+                type ranged uint PERCENT_MIN_BW .. PERCENT_MAX_BW;
+                units "percent";
+                help "Bandwidth limit in percentage";
+            }
+        }   
+
+        attribute burst-size-limit {
+            type ranged uint64 MIN_BURST .. MAX_BURST;
+            flag k1000 mandatory;
+            units "bytes";
+            help "Burst size limit";
+        }
+    }
+
+    object then {
+        define DDLAID_POL_THEN;
+        help "Action to take if the rate limits are exceeded"; 
+        flag remove-empty mandatory oneliner-plus;
+
+        attribute discard {
+            type toggle;
+            help "Discard the packet";
+        }
+        
+        attribute loss-priority {
+            help "Packet's loss priority";
+            type enum ubyte {
+                choice low {
+                    help "Loss priority low";
+                    value 1;
+                }
+                choice high {
+                    help "Loss priority high";
+                    value 2;
+                }
+            }
+        }
+        attribute forwarding-class {
+            help "Classify packet to forwarding class";
+            type enum ubyte {
+                choice assured-forwarding {
+                    value 1;
+                }
+                choice best-effort {
+                    value 2;
+                }
+                choice expedited-forwarding {
+                    value 3;
+                }
+                choice network-control {
+                    value 4;
+                }
+            }
+        }
+    }
+}
+
+
+object juniper-config {
+    
+    object sync {
+        help "SDK Your Net Corp. application information";
+        define DDLAID_SYNC;
+        flag remove-empty;
+        
+        object dpm {
+        
+            help "Configure Dynamic Policy Manager";
+            define DDLAID_SYNC_DPM;
+            flag remove-empty;
+            action enable-process DNAME_DPM_MGMT;
+            notify dpm-mgmt;
+                        
+            attribute use-classic-filters {
+                type toggle;
+                hidden internal;
+            }
+
+            object policer {
+                define DDLAID_POLICER;
+                help "Define a policer";
+                type setof firewall_policer_subset_type;
+                flag mandatory;
+            }
+            
+            object interface-defaults {
+                define DDLAID_INT_DEFAULTS;
+                flag mandatory;
+                help "Configure interface default policies";
+                
+                object ifl-pattern {
+                    define DDLAID_IFL_PATTERN;
+                    flag setof list homogeneous nokeyword mandatory;
+                    
+                    attribute interface-pattern {
+                        flag nokeyword identifier;
+                        type ranged string 1 .. DPM_MGMT_STRLEN;
+                        help "Interface name or pattern";
+                    }
+                    
+                    attribute input-policer {
+                        flag mandatory;
+                        type string;
+                        help "Policer for ingress filter action";
+                        FW_NAME_LEN_CHECK;
+                        path-reference "sync dpm policer";
+                        must ("sync dpm policer $$");
+                        must-message "This SYNC DPM policer must be configured";
+                    }
+                    
+                    attribute output-policer {
+                        flag mandatory;
+                        type string;
+                        help "Policer for egress filter action";
+                        FW_NAME_LEN_CHECK;
+                        path-reference "sync dpm policer";
+                        must ("sync dpm policer $$");
+                        must-message "This SYNC DPM policer must be configured";
+                    }
+                }
+            }
+
+            object subscriber-database {
+                define DDLAID_SUBSCRIBER_DB;
+                flag remove-empty;
+                help "Configure subscribers and subscriber policies";
+
+                object class {
+                    define DDLAID_CLASS;
+                    help "Class or category";
+                    flag remove-empty setof list;
+                    
+                    attribute class-name {
+                        flag nokeyword identifier;
+                        type ranged string 1 .. DPM_MGMT_STRLEN;
+                        help "Class name";
+                    }
+                                    
+                    attribute policer {
+                        flag mandatory;
+                        type string;
+                        help "Policer associated with subscribers of this class";
+                        FW_NAME_LEN_CHECK;
+                        path-reference "sync dpm policer";
+                        must ("sync dpm policer $$");
+                        must-message "This SYNC DPM policer must be configured";
+                    }
+                    
+                    object subscriber {
+                        define DDLAID_SUBSCRIBER;
+                        flag setof list;
+                        help "Subscriber with the given policy class";
+                        
+                        attribute subscriber-name {
+                            flag nokeyword identifier;
+                            type ranged string 1 .. DPM_MGMT_STRLEN;
+                            help "Subscriber name";
+                            must (unique "sync dpm subscriber-database class <*> subscriber $$");
+                            must-message "Subscriber name has to be unique amongst all subscribers";
+                        }
+
+                        attribute password {
+                            flag mandatory;
+                            type ranged string 1 .. DPM_MGMT_STRLEN;
+                            help "Subscriber password";
+                        }
+                    }
+                }
+            }
+            
+            /*
+             * Trace options configuration:
+             */
+            object traceoptions {
+                help "Trace options";
+                flag remove-empty;
+                require trace;
+            
+                /* From trace_include.dd */
+                
+                TRACEOPTIONS_FILE;
+                
+                SYSLOG_ATTRIBUTE;
+                
+                /* Types of trace messages generated by dpm-mgmt */
+    
+                object "flag" {
+                    help "Tracing flag parameters";
+                    flag setof list oneliner;
+    
+                    attribute flag-name {
+                        flag identifier nokeyword;
+                        type enum uint {
+                            choice normal {
+                                help "Trace normal events";
+                                define DPM_TRACEFLAG_NORMAL;
+                            }
+                            choice kcom {
+                                help "Trace kcom events";
+                                define DPM_TRACEFLAG_KCOM;
+                            }
+                            choice connection {
+                                help "Trace connection events";
+                                define DPM_TRACEFLAG_CONNECTION;
+                            }
+                            choice configuration {
+                                help "Trace configuration events";
+                                define DPM_TRACEFLAG_CONF;
+                            }
+                            choice "all" {
+                                help "Trace everything";
+                                define DPM_TRACEFLAG_ALL;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

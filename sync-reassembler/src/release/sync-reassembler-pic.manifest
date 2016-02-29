@@ -1,0 +1,12 @@
+# $Id: sync-reassembler-pic.manifest 346460 2009-11-14 05:06:47Z ssiano $
+#
+# Copyright (c) 2009, Juniper Networks, Inc.
+# All rights reserved.
+#
+#        Name: reassembler
+# Description: SYNC IP Fragment Reassembly sample application
+#        Type: Data application
+#     Runs on: MS PIC
+#
+%TOPDIR%/../obj-xlr/sbin/reassembler/reassembler store=opt/sdk/sbin/reassembler mode=555
+%TOPDIR%/etc/reassembler.conf store=var/etc/init.dir/reassembler.conf mode=444

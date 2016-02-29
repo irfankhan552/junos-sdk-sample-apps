@@ -1,0 +1,419 @@
+/*
+ * This odl file defines a DTD called junos-ifinfo.dtd
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+dtd junos-jnx-ifinfo;
+
+tag jnx-ifinfo-version {
+    flag root;
+    tag jnx-display-version {
+        flag hidden;
+        tag extensive {
+            flag hidden;
+            type empty;
+        }
+        format display-version-format;
+    }
+}
+tag jnx-ifinfo-interfaces-aliases {
+    flag root;
+    tag jnx-ifinfo-aliases {
+        flag multiple;
+            tag jnx-ifinfo-interface-name {
+                type string;
+            }
+            tag jnx-ifinfo-interface-status {
+                type string;
+            }
+            tag jnx-ifinfo-interface-alias {
+                type string;
+            }
+    }
+    format jnx-ifinfo-interfaces-aliases-format {
+        header "InterfaceName   Status       Alias
+";
+        picture "@<<<<<<<<<<<<<    @<<<<<<    @<<<<<<<<<<<<
+";
+        line { 
+            field jnx-ifinfo-interface-name;
+            field jnx-ifinfo-interface-status;
+            field jnx-ifinfo-interface-alias;
+        }
+    }
+}
+tag jnx-ifinfo-interfaces-information {
+    flag root;
+    tag jnx-ifinfo-interfaces {
+        flag multiple;
+        tag jnx-ifinfo-interface-name {
+            type string;
+        }
+        tag jnx-ifinfo-interface-index {
+            type int;
+        }
+        tag jnx-ifinfo-interface-snmp-index {
+            type int;
+        }
+        tag jnx-ifinfo-interface-admin-status {
+            type int;
+        }
+        tag jnx-ifinfo-interface-link-status {
+            type int;
+        }
+        tag jnx-ifinfo-interface-type {
+            type string;
+        }
+        tag jnx-ifinfo-interface-link {
+            type string;
+        }
+        tag jnx-ifinfo-interface-mtu {
+            type string;
+        }
+        tag jnx-ifinfo-interface-speed {
+            type string;
+        }
+        tag jnx-ifinfo-interface-desc {
+            type string;
+        }
+        tag jnx-ifinfo-interface-dev-flags {
+            type string;
+        }
+        tag jnx-ifinfo-interface-stat-traff-ibytes {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-stat-traff-ibytes-rate {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-stat-traff-ipkts {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-stat-traff-ipkts-rate {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-stat-traff-obytes {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-stat-traff-obytes-rate {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-stat-traff-opkts {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-stat-traff-opkts-rate {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-stat-oerr-carrier-transitions {
+            type uint;
+            formal-name "Carrier transitions";
+        }
+        tag jnx-ifinfo-interface-stat-oerr-errors {
+            type uint;
+            formal-name "Generic errors";
+        }
+        tag jnx-ifinfo-interface-stat-oerr-drops {
+            type uint;
+            formal-name "Drops";
+        }
+        tag jnx-ifinfo-interface-stat-oerr-mtu-errors {
+            type uint;
+            formal-name "MTU errors";
+        }
+        tag jnx-ifinfo-interface-stat-oerr-resource-errors {
+            type uint;
+            formal-name "Resource errors";
+        }
+        tag jnx-ifinfo-interface-stat-ierr-errors {
+            type uint;
+            formal-name "Generic errors";
+        }
+        tag jnx-ifinfo-interface-stat-ierr-drops {
+            type uint;
+            formal-name "Drops";
+        }
+        tag jnx-ifinfo-interface-stat-ierr-framing-errors {
+            type uint;
+            formal-name "Framing errors";
+        }
+        tag jnx-ifinfo-interface-stat-ierr-runts {
+            type uint;
+            formal-name "Runts";
+        }
+        tag jnx-ifinfo-interface-stat-ierr-giants {
+            type uint;
+            formal-name "Giants";
+        }
+        tag jnx-ifinfo-interface-stat-ierr-policed-discards {
+            type uint;
+            formal-name "Policed discards";
+        }
+        tag jnx-ifinfo-interface-stat-ierr-resource-errors {
+            type uint;
+            formal-name "Resource errors";
+        }
+        tag jnx-ifinfo-interface-ifl-name {
+            type string;
+        }
+        tag jnx-ifinfo-interface-ifl-index {
+            type int;
+        }
+        tag jnx-ifinfo-interface-ifl-snmp-index {
+            type int;
+        }
+        tag jnx-ifinfo-interface-ifl-flags {
+            type string;
+        }
+        tag jnx-ifinfo-interface-ifl-status {
+            type string;
+        }
+        tag jnx-ifinfo-interface-ifl-bw {
+            type string;
+        }
+        tag jnx-ifinfo-interface-iff-af {
+            type string;
+        }
+        tag jnx-ifinfo-interface-iff-mtu {
+            type string;
+        }
+        tag jnx-ifinfo-interface-iff-table {
+            type string;
+        }
+        tag jnx-ifinfo-interface-iff-flags {
+            type string;
+        }
+        tag jnx-ifinfo-interface-ifa-flags {
+            type string;
+        }
+        tag jnx-ifinfo-interface-ifa-dest {
+            type ipaddr;
+        }
+        tag jnx-ifinfo-interface-ifa-local {
+            type ipaddr;
+        }
+        tag jnx-ifinfo-interface-ifa-bcast {
+            type ipaddr;
+        }
+        tag jnx-ifinfo-interface-ifl-stat-traff-ibytes {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-ifl-stat-traff-ibytes-rate {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-ifl-stat-traff-ipkts {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-ifl-stat-traff-ipkts-rate {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-ifl-stat-traff-obytes {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-ifl-stat-traff-obytes-rate {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-ifl-stat-traff-opkts {
+            type uint;
+        }
+        tag jnx-ifinfo-interface-ifl-stat-traff-opkts-rate {
+            type uint;
+        }
+    }
+    style summary {
+        format jnx-ifinfo-interface-heading1-format {
+            header "Interface Name   Intf Index     SNMP Index     Link
+";
+            picture "@<<<<<<<<<<<<<      @<<<<<<<<<      @<<<<<<<  @<<<<<
+";
+            line {
+                field jnx-ifinfo-interface-name; 
+                field jnx-ifinfo-interface-index;
+                field jnx-ifinfo-interface-snmp-index;
+                field jnx-ifinfo-interface-link-status;
+            }
+        }
+    }
+    style brief {
+        format jnx-ifinfo-interface-heading2-format {
+            fmtflag blank-line;
+            picture "
+ Physical interface: @, @, Physical link is @
+  Interface index: @, SNMP ifIndex: @
+
+  Logical interface @ (Index @) (SNMP ifIndex @)
+   Status: @ Bandwidth: @
+";
+            line {
+                field jnx-ifinfo-interface-name;
+                field jnx-ifinfo-interface-admin-status;
+                field jnx-ifinfo-interface-link-status;
+            }
+            line {
+                field jnx-ifinfo-interface-index;
+                field jnx-ifinfo-interface-snmp-index;
+            }
+            line {
+                field jnx-ifinfo-interface-ifl-name;
+                field jnx-ifinfo-interface-ifl-index;
+                field jnx-ifinfo-interface-ifl-snmp-index;
+            }
+            line {
+                field jnx-ifinfo-interface-ifl-status;
+                field jnx-ifinfo-interface-ifl-bw;
+            }
+        }
+    }
+    style detail {
+        format jnx-ifinfo-interface-heading3-format {
+            fmtflag blank-line;
+            picture "
+Physical interface: @, @, Physical link is @ 
+  Interface index: @, SNMP ifIndex: @
+  Type: @ Link-level type: @, MTU: @,Speed: @
+  Device flags : @
+        
+";
+            line {
+                field jnx-ifinfo-interface-name;
+                field jnx-ifinfo-interface-admin-status;
+                field jnx-ifinfo-interface-link-status;
+            }
+            line {   
+                field jnx-ifinfo-interface-index;
+                field jnx-ifinfo-interface-snmp-index;
+            }
+            line {
+                field jnx-ifinfo-interface-type;
+                field jnx-ifinfo-interface-link;
+                field jnx-ifinfo-interface-mtu;
+                field jnx-ifinfo-interface-speed;
+            }
+            line {
+                field jnx-ifinfo-interface-dev-flags;
+            }
+        }
+        format jnx-ifinfo-interface-heading3-format-traffic {
+            header "   IPv4 Traffic statistics:\\n";
+            indent 4;
+            picture "
+Input  bytes  : @>>>>>>>>>>>>>>>>>>> @>>>>>>>>>>>>>>>>>>> bps
+Output bytes  : @>>>>>>>>>>>>>>>>>>> @>>>>>>>>>>>>>>>>>>> bps
+Input  packets: @>>>>>>>>>>>>>>>>>>> @>>>>>>>>>>>>>>>>>>> pps
+Output packets: @>>>>>>>>>>>>>>>>>>> @>>>>>>>>>>>>>>>>>>> pps
+";
+            line {
+                field jnx-ifinfo-interface-stat-traff-ibytes;
+                field jnx-ifinfo-interface-stat-traff-ibytes-rate;
+            }
+            line {
+                field jnx-ifinfo-interface-stat-traff-ipkts;
+                field jnx-ifinfo-interface-stat-traff-ipkts-rate;
+            }
+            line {
+                field jnx-ifinfo-interface-stat-traff-obytes;
+                field jnx-ifinfo-interface-stat-traff-obytes-rate;
+            }
+            line {
+                field jnx-ifinfo-interface-stat-traff-opkts;
+                field jnx-ifinfo-interface-stat-traff-opkts-rate;
+            }
+        }
+        format jnx-ifinfo-interface-heading3-format-ierror {
+            header "   Input errors:\\n";
+            indent 4;
+            flag leading colon comma space fieldwrap;
+            line {
+                field jnx-ifinfo-interface-stat-ierr-errors;
+                field jnx-ifinfo-interface-stat-ierr-drops;
+                field jnx-ifinfo-interface-stat-ierr-framing-errors;
+                field jnx-ifinfo-interface-stat-ierr-runts;
+                field jnx-ifinfo-interface-stat-ierr-giants;
+                field jnx-ifinfo-interface-stat-ierr-policed-discards;
+                field jnx-ifinfo-interface-stat-ierr-resource-errors;
+            }
+        }
+        format jnx-ifinfo-interface-heading3-format-oerror {
+            header "   Output errors:\\n";
+            indent 4;
+            flag leading colon comma space fieldwrap;
+            line {
+                field jnx-ifinfo-interface-stat-oerr-carrier-transitions;
+                field jnx-ifinfo-interface-stat-oerr-errors;
+                field jnx-ifinfo-interface-stat-oerr-drops;
+                field jnx-ifinfo-interface-stat-oerr-mtu-errors;
+                field jnx-ifinfo-interface-stat-oerr-resource-errors;
+            }
+        }
+        format jnx-ifinfo-interface-heading3-format-ifl {
+            picture "
+    Logical interface @ (Index @) (SNMP ifIndex @) 
+    Status: @ Bandwidth: @
+    Flags: @ 
+    Protocol @, MTU: @, Table: @
+      Flags: @
+      Addresses, Flags: @ 
+        Destination: @, Local: @, Broadcast: @
+        ";
+            line {
+                field jnx-ifinfo-interface-ifl-name;
+                field jnx-ifinfo-interface-ifl-index;
+                field jnx-ifinfo-interface-ifl-snmp-index;
+            } 
+            line {
+                field jnx-ifinfo-interface-ifl-status;
+                field jnx-ifinfo-interface-ifl-bw;
+            }
+            line {
+                field jnx-ifinfo-interface-ifl-flags;
+            }
+            line {
+                field jnx-ifinfo-interface-iff-af;
+                field jnx-ifinfo-interface-iff-mtu;
+                field jnx-ifinfo-interface-iff-table;
+            }
+            line {
+                field jnx-ifinfo-interface-iff-flags;
+            }
+            line {
+                field jnx-ifinfo-interface-ifa-flags;
+            }
+            line {
+                field jnx-ifinfo-interface-ifa-dest;
+                field jnx-ifinfo-interface-ifa-local;
+                field jnx-ifinfo-interface-ifa-bcast;
+            }
+        }
+        format jnx-ifinfo-interface-heading3-format-ifl-traffic {
+            header "     IPv4 Traffic statistics\\n";
+            indent 6;
+            picture "
+Input  bytes  : @>>>>>>>>>>>>>>>>>>> @>>>>>>>>>>>>>>>>>>> bps
+Output bytes  : @>>>>>>>>>>>>>>>>>>> @>>>>>>>>>>>>>>>>>>> bps
+Input  packets: @>>>>>>>>>>>>>>>>>>> @>>>>>>>>>>>>>>>>>>> pps
+Output packets: @>>>>>>>>>>>>>>>>>>> @>>>>>>>>>>>>>>>>>>> pps
+";
+            line {
+                field jnx-ifinfo-interface-ifl-stat-traff-ibytes;
+                field jnx-ifinfo-interface-ifl-stat-traff-ibytes-rate;
+            }
+            line {
+                field jnx-ifinfo-interface-ifl-stat-traff-ipkts;
+                field jnx-ifinfo-interface-ifl-stat-traff-ipkts-rate;
+            }
+            line {
+                field jnx-ifinfo-interface-ifl-stat-traff-obytes;
+                field jnx-ifinfo-interface-ifl-stat-traff-obytes-rate;
+            }
+            line {
+                field jnx-ifinfo-interface-ifl-stat-traff-opkts;
+                field jnx-ifinfo-interface-ifl-stat-traff-opkts-rate;
+            }
+        }
+    }
+}

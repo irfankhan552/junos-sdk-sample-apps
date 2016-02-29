@@ -1,0 +1,16 @@
+<junos-package>
+    <type>SDK_PKG_RE</type>
+    <title>SDK Your Net Corp. IP Probe MT Example</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>SDK Your Net Corp. (phony example co.)</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>
+This package contains the SYNC IP Probe MT</description>
+    <has-ddl/>
+    <has-daemon>ipprobe-mt</has-daemon>
+    <kill-all-daemons/>
+</junos-package>
+

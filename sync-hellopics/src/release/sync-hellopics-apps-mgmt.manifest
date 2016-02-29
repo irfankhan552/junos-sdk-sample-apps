@@ -1,0 +1,20 @@
+# $Id: sync-hellopics-apps-mgmt.manifest 412622 2010-11-25 20:13:29Z builder $
+#
+# Copyright (c) 2007-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+/set package_id=24 role=Provider_All_Features_Daemon
+#
+#        Name: hellopics-mgmt
+# Description: SYNC Hellopics sample RE to Multiservice PIC IPC demo
+#        Type: Management daemon
+#     Runs on: Routing Engine
+#
+%TOPDIR%/sbin/hellopics-mgmt/hellopics-mgmt store=%INSTALLDIR%/sbin/hellopics-mgmt mode=555 program_id=1
+%TOPDIR%/lib/odl/xmltags/lib%PROVIDER_PREFIX%-hellopics-render.so.1 store=opt/lib/render/lib%PROVIDER_PREFIX%-hellopics-render.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-hellopics-mgmt-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-hellopics-mgmt-dd.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-hellopics-mgmt-actions-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-hellopics-mgmt-actions-dd.so mode=444
+
+# This one is everything in the package for mgd:
+
+%TOPDIR%/lib/ddl/feature/hellopics_desc.dml store=opt/lib/dd/%PROVIDER_PREFIX%-hellopics_desc.dml mode=444

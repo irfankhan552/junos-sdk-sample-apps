@@ -1,0 +1,12 @@
+<junos-package>
+    <type>SDK_PKG_CNTR</type>
+    <title>SDK Your Net Corp. Passthru Plugin Dataplane Component</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>SDK Your Net Corp. (phony example co.)</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>
+This package contains the SYNC Passthru Plugin Dataplane Component (RE Container)</description>
+</junos-package>

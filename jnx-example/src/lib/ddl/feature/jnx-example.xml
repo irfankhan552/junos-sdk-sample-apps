@@ -1,0 +1,54 @@
+<!--  
+  $Id: jnx-example.xml,v 1.4.324.1 2009-08-13 04:56:51 kdickman Exp $ 
+  
+  This code is provided as is by Juniper Networks SDK Developer Support.
+  It is provided with no warranties or guarantees, and Juniper Networks
+  will not provide support or maintenance of this code in any fashion.
+  The code is provided only to help a developer better understand how
+  the SDK can be used.
+  
+  Copyright (c) 2006-2007, Juniper Networks, Inc. 
+  All rights reserved. 
+-->
+
+<sdk-bundle>
+  <daemon-table>
+    <default-package>jnx-example</default-package>
+
+    <daemon-entry>
+      <name>jnx-exampled</name>
+      <ui-name>jnx-example-service</ui-name>
+      <description>Example service process</description>
+      <!-- 
+           For Junos INSTALLDIR will be /opt/sbin but for RE SDK applications
+           it will be /opt/sdk/<provider-prefix>/opt/sbin.
+           Normally RE SDK applications would just use the path
+           /opt/sdk/<provider-prefix>/sbin but here we need to accomdate using
+           this as a native Junos sample or an RE SDK sample application.
+      -->
+      <binary>INSTALLDIR/opt/sbin/jnx-exampled</binary>
+      
+      <system-process-failover acceptable="exclude"/>
+      <optional/>
+      <checkconf/>
+      <run-if-configured/>
+      <!--
+           This daemon will run on all REs for demo purposes, more typically 
+           daemons run only on the RE which is the "protocol master", and would
+           use the tag <mode-protocol-master/> instead of the two tags below.
+      -->
+      <mode-all-master/>
+      <mode-all-backup/>
+    </daemon-entry>
+  </daemon-table>
+
+  <require-table>
+    <require-entry>
+      <name>jnx-example</name>
+      <help>Example configuration</help>
+      <configure/>
+      <view/>
+    </require-entry>
+  </require-table>
+
+</sdk-bundle>

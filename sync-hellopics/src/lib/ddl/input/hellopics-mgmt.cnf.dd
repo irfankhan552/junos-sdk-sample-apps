@@ -1,0 +1,83 @@
+/*
+ * $Id: hellopics-mgmt.cnf.dd,v 1.4 2008-02-29 03:13:14 taoliu Exp $
+ *
+ * hellopics-mgmt.cnf.dd - hellopics mgmt process configuration
+ *
+ * James Kelly, June 2007
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_HELLOPICS_MGMT "hellopics-mgmt"
+
+daemon-names hellopics-mgmt;
+
+object juniper-config {
+    flag no-struct;
+
+    object sync {
+        help "SDK Your Net Corp. application information";
+        flag remove-empty;
+        define DDLAID_SYNC;
+        
+        object hellopics {
+            help "Enable the Hello PICs management process";
+            notify DNAME_HELLOPICS_MGMT;
+            define DDLAID_SYNC_HELLOPICS;
+
+            /* init hellopics-mgmt daemon if this config exists */
+            action enable-process DNAME_HELLOPICS_MGMT;
+            
+            
+            /*
+             * Trace options configuration:
+             */
+            object traceoptions {
+                help " Policy Enforcement Daemon trace options";
+                require trace;
+                flag remove-empty;
+            
+                /* From trace_include.dd */
+                
+                TRACEOPTIONS_FILE;
+                
+                SYSLOG_ATTRIBUTE;
+    
+                object "flag" {
+                    help "Tracing flag parameters";
+                    flag setof list;
+                    flag oneliner; /* put name on same line in output */
+    
+                    attribute flag-name {
+                        flag identifier nokeyword;
+                        type enum uint {
+                            choice normal {
+                                help "Trace normal events";
+                                define HELLOPICS_TRACEFLAG_NORMAL;
+                            }
+                            choice connection {
+                                help "Trace connection events";
+                                define HELLOPICS_TRACEFLAG_CONNECTION;
+                            }
+                            choice "all" {
+                                help "Trace everything";
+                                define HELLOPICS_TRACEFLAG_ALL;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

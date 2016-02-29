@@ -1,0 +1,36 @@
+<!--
+  $Id: monitube2.xml,v 1.2.4.2 2009-09-05 03:20:42 ssiano Exp $
+
+ This code is provided as is by Juniper Networks SDK Developer Support.
+ It is provided with no warranties or guarantees, and Juniper Networks
+ will not provide support or maintenance of this code in any fashion.
+ The code is provided only to help a developer better understand how
+ the SDK can be used.
+
+ Copyright (c) 2009, Juniper Networks, Inc.
+ All rights reserved.
+-->
+
+<pkg-config>
+
+    <!-- Package configuration header - one per config file -->
+    <header>
+        <!-- config file syntax version -->
+        <version>1.0</version>
+        
+        <!-- unique services package (container) name -->
+        <name>sync-monitube2-data</name>
+    </header>
+ 
+    <!-- List of plugins -->
+    <plug-in>
+        <name>monitube2-plugin</name>
+        
+        <!-- plugin shared object full name (with path) -->
+        <path>/opt/sdk/lib/libmonitube2-plugin.so.1</path>
+        
+        <!-- plugin entry point; function is called when plugin is loaded -->
+        <entry>monitube2_entry</entry>
+    </plug-in>
+
+</pkg-config>

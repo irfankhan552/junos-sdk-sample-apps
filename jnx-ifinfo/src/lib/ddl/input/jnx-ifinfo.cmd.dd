@@ -1,0 +1,90 @@
+/*
+ * $Id: jnx-ifinfo.cmd.dd,v 1.3 2008-02-29 03:13:14 taoliu Exp $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 1998-2003, 2005-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+#define DNAME_JNX_IFINFOD "jnx-ifinfod"
+
+require-names jnx-ifinfo;
+
+command juniper-command {
+
+    /*
+     * Example service commands
+     */
+    command show {
+        command jnx-ifinfo {
+            require view;
+            help "Show ifinfo service information";
+
+            command version {
+               help "Show ifinfo service version";
+               action execute DNAME_JNX_IFINFOD;
+               argument level {
+               flag nokeyword explicit;
+                   type enum int {
+                      choice brief {
+                          help "Display brief";
+                             value OPT_BRIEF;
+                      }
+                      choice detail {
+                          help "Display detail";
+                          value OPT_DETAIL;
+                      }
+                   }
+                   default brief;
+               }
+            }
+
+            command interfaces {
+                help "Show ifinfo interfaces";
+                action execute DNAME_JNX_IFINFOD;
+
+                command aliases {
+                     help "Show ifinfo interfaces aliases";
+                     action execute DNAME_JNX_IFINFOD;
+                 }
+                argument level {
+                    flag nokeyword explicit;
+
+                    type enum int {
+                        choice detail {
+                            help "Display detailed information";
+                            value OPT_DETAIL;
+                        }
+                        choice brief {
+                            help "Display brief information (default)";
+                            value OPT_BRIEF;
+                        }
+                        choice summary {
+                            help "Display summary information ";
+                            value OPT_SUMMARY;
+                        }
+                        choice up {
+                            help "Display interfaces that are physically UP";
+                            define OPT_UP;
+                        }
+                        choice down {
+                            help "Display interfaces that are physically DOWN";
+                            define OPT_DOWN;
+                        }
+                    }
+                    default brief;
+                }
+
+                argument interface-name {
+                    flag nokeyword;
+                    type string;
+                    help "Name of physical interface or alias";
+                }
+            }
+        }
+    }
+}

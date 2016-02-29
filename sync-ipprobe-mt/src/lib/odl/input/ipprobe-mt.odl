@@ -1,0 +1,133 @@
+/* 
+ * $Id: ipprobe-mt.odl 346460 2009-11-14 05:06:47Z ssiano $
+ * 
+ * Copyright (c) 2009, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+/*
+ * This ODL file defines a DTD called ipprobe-mt.dtd
+ */
+dtd ipprobe-mt;
+
+/* Output example:
+
+Probe:            probe-name
+Packet Size:      256 byte
+Packet Count:     100
+Packet Interval:  10 ms
+
+--------
+Destination:         10.1.2.3
+
+                     Average     Max         Average     Max
+                     Delay       Delay       Jitter      Jitter
+source->destination  xxxx.xxx    xxxx.xxx    xxxx.xxx    xxxx.xxx
+destination->source  xxxx.xxx    xxxx.xxx    xxxx.xxx    xxxx.xxx
+round-trip           xxxx.xxx    xxxx.xxx    xxxx.xxx    xxxx.xxx
+
+--------
+Destination:         10.1.2.4
+
+                     Average     Max         Average     Max
+                     Delay       Delay       Jitter      Jitter
+source->destination  xxxx.xxx    xxxx.xxx    xxxx.xxx    xxxx.xxx
+destination->source  xxxx.xxx    xxxx.xxx    xxxx.xxx    xxxx.xxx
+round-trip           xxxx.xxx    xxxx.xxx    xxxx.xxx    xxxx.xxx
+
+*/
+tag probe-report {
+    flag root;
+
+    tag probe-msg {
+        type string;
+    }
+    format probe-msg-format {
+        line {
+            field probe-msg template "%s";
+        }
+    }
+
+    tag probe-info {
+        tag probe-name {
+            type string;
+        }
+        tag pkt-size {
+            type int;
+        }
+        tag pkt-count {
+            type int;
+        }
+        tag pkt-interval {
+            type int;
+        }
+        format probe-info-format {
+            line {
+                field probe-name template   "Probe:              %s";
+            }
+            line {
+                field pkt-size template     "Pakcet Size:        %d byte";
+            }
+            line {
+                field pkt-count template    "Packet Count:       %d";
+            }
+            line {
+                field pkt-interval template "Packet Interval:    %d ms";
+            }
+        }
+    }
+
+    tag probe-result {
+        flag multiple;
+
+        tag result-dst {
+            tag probe-dst {
+                type string;
+            }
+            format rsult-dst-format {
+                line {
+                    field probe-dst template "
+
+--------
+Destination:         %s
+";
+                }
+            }
+        }
+
+        tag result-table {
+            tag probe-path {
+                type string;
+            }
+            tag average-delay {
+                type string;
+            }
+            tag max-delay {
+                type string;
+            }
+            tag average-jitter {
+                type string;
+            }
+            tag max-jitter {
+                type string;
+            }
+
+            format result-table-format {
+                header "
+                     Average     Max         Average     Max
+                     Delay       Delay       Jitter      Jitter
+";
+                picture "
+@<<<<<<<<<<<<<<<<<<  @>>>>>>>    @>>>>>>>    @>>>>>>>    @>>>>>>>";
+                line {
+                    field probe-path;
+                    field average-delay;
+                    field max-delay;
+                    field average-jitter;
+                    field max-jitter;
+                }
+            }
+        }
+    }
+}
+

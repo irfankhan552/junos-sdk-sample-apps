@@ -1,0 +1,47 @@
+<!--
+$Id: policy_manager.xml,v 1.3.286.1 2009-08-13 05:06:08 kdickman Exp $
+
+This code is provided as is by Juniper Networks SDK Developer Support.
+It is provided with no warranties or guarantees, and Juniper Networks
+will not provide support or maintenance of this code in any fashion.
+The code is provided only to help a developer better understand how
+the SDK can be used.
+
+Copyright (c) 2007-2008, Juniper Networks, Inc.
+All rights reserved.
+-->
+
+<sdk-bundle>
+  <daemon-table>
+    <default-package>sync-policy-manager-mgmt</default-package>
+
+    <daemon-entry>
+      <name>ped</name>
+      <ui-name>sync-pe-service</ui-name>
+      <binary>INSTALLDIR/sbin/ped</binary>
+      <description>SDK Your Net Corp. Policy Enforcement process</description>
+      <system-process-failover acceptable="exclude"/>
+      <optional/>
+      <checkconf/>
+      <mode-protocol-master/>
+      <run-if-configured/>
+      <noversion/>
+    </daemon-entry>
+    
+    <daemon-entry>
+      <name>psd</name>
+      <ui-name>sync-ps-service</ui-name>
+      <binary>INSTALLDIR/sbin/psd</binary>
+      <description>SDK Your Net Corp. Policy Server process</description>
+      <system-process-failover acceptable="exclude"/>
+      <optional/>
+      <checkconf/>
+      <mode-protocol-master/>
+      <run-if-configured/>
+      <noversion/>      
+    </daemon-entry>
+
+  </daemon-table>
+
+</sdk-bundle>
+

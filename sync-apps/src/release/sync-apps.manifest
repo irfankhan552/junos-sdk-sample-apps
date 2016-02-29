@@ -1,0 +1,32 @@
+#
+# $Id: sync-apps.manifest 412622 2010-11-25 20:13:29Z builder $
+#
+# Copyright (c) 2007-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+/set package_id=25 role=Provider_RTSOCK_Application
+#
+#        Name: helloworldd
+# Description: SYNC Helloworld sample: The minimal setup for an RE-SDK daemon
+#        Type: Daemon application
+#     Runs on: Routing Engine
+#
+%TOPDIR%/lib/odl/xmltags/lib%PROVIDER_PREFIX%-helloworld-render.so.1 store=opt/lib/render/lib%PROVIDER_PREFIX%-helloworld-render.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-helloworld-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-helloworld-dd.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-helloworld-actions-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-helloworld-actions-dd.so mode=444
+%TOPDIR%/sbin/helloworldd/helloworldd store=%INSTALLDIR%/sbin/helloworldd mode=555 program_id=1
+#
+#        Name: counterd
+# Description: SYNC Counter sample: Extends Helloworld to demo KCOM GENCFG
+#        Type: Daemon application
+#     Runs on: Routing Engine
+#
+%TOPDIR%/lib/odl/xmltags/lib%PROVIDER_PREFIX%-counter-render.so.1 store=opt/lib/render/lib%PROVIDER_PREFIX%-counter-render.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-counter-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-counter-dd.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-counter-actions-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-counter-actions-dd.so mode=444
+%TOPDIR%/sbin/counterd/counterd store=%INSTALLDIR%/sbin/counterd mode=555 program_id=2
+
+# This one is everything in the package for mgd:
+
+%TOPDIR%/lib/ddl/feature/daemon_desc.dml store=opt/lib/dd/%PROVIDER_PREFIX%-daemon_desc.dml mode=444
+

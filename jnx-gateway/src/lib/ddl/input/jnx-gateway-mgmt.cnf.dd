@@ -1,0 +1,296 @@
+/*
+ * $Id: jnx-gateway-mgmt.cnf.dd,v 1.5 2008-02-29 03:13:14 taoliu Exp $
+ *
+ * jnx-gateway.cnf.dd - jnx-gateway package process configuration
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2005-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+/*#include "ddl_include.dd"  */
+#include "common_include.dd" 
+#include "trace_include.dd"
+
+#define DNAME_JNX_GATEWAYD "jnx-gateway-mgmt"
+daemon-names jnx-gateway-mgmt;
+require-names jnx-gateway-mgmt;
+
+#define JNX_GATEWAY_TRACE_OPTIONS     \
+    choice init { \
+        help "Trace while initializing";\
+        define JNX_GATEWAY_TRACEFLAG_INIT;\
+    }\
+    choice config { \
+        help "Trace while reading configuration";\
+        define JNX_GATEWAY_TRACEFLAG_CONFIG;\
+    }\
+    choice events {\
+        help "Trace events";\
+        define JNX_GATEWAY_TRACEFLAG_EVENT;\
+    }\
+    choice hello {\
+        help "Trace hello messages";\
+        define JNX_GATEWAY_TRACEFLAG_HELLO;\
+    }\
+    choice route {\
+        help "Trace route management events";\
+        define JNX_GATEWAY_TRACEFLAG_ROUTE;\
+    }\
+    choice signaling {\
+        help "Trace signaling events";\
+        define JNX_GATEWAY_TRACEFLAG_SIGNAL;\
+    }\
+    choice error {\
+        help "Trace error conditions";\
+        define JNX_GATEWAY_TRACEFLAG_ERR;\
+    }\
+    choice "all" { \
+        help "Trace everything";\
+        define JNX_GATEWAY_TRACEFLAG_ALL;\
+    }
+
+object juniper-config {
+        flag no-struct;
+
+        object sdk {
+                flag no-struct;
+                flag remove-empty;
+                help "Mp-sdk application configuration";
+
+                object jnpr {
+                        flag no-struct;
+                        flag remove-empty;
+                        help "Juniper mp-sdk application configuration";
+
+                        object jnx-gateway {
+                                help "Juniper mp-sdk gateway configuration";
+                                flag remove-empty;
+                                notify DNAME_JNX_GATEWAYD;
+                                define DDLAID_JNX_GATEWAY;
+                                require jnx-gateway-mgmt;
+
+                                /* This node and its subnodes require jnx-gateway-mgmt
+                                 * to be up and running */
+
+                                action enable-process DNAME_JNX_GATEWAYD;
+
+                                object user {
+                                        help "Juniper gateway user information";
+                                        flag setof list remove-empty;
+
+                                        attribute user-name {
+                                                flag identifier nokeyword;
+                                                type ranged string 1 .. 64;
+                                                help "User profile name";
+                                                cname "jnx_user_name";
+                                        }
+
+                                        attribute address-range {
+                                                type ipv4prefix;
+                                                flag mandatory;
+                                                help "Address range for the client group";
+                                                cname "jnx_user_addr_range";
+                                        }
+
+                                        attribute egress-vrf {
+                                                type string;
+                                                flag mandatory;
+                                                help "Egress routing instance name";
+                                                INSTANCE_NAME_VALIDATE; 
+                                                cname "jnx_user_egress_vrf";
+                                        }
+
+                                        attribute ip-ip {
+                                                type string;
+                                                flag mandatory;
+                                                help "IP Address or ID of egress tunnel endpoint";
+                                                cname "jnx_user_ipip_gw_id";
+                                        }
+                                }
+
+                                object control {
+                                        help "Juniper gateway control configuration"; 
+                                        flag remove-empty;
+
+                                        object policy {
+                                                help "Configure juniper gateway control policy";
+                                                flag remove-empty;
+
+                                                object instance-policy {
+                                                        help "Per instance address allocation policy";
+                                                        flag setof list remove-empty; 
+
+                                                        attribute instance {
+                                                                flag identifier nokeyword;
+                                                                type ranged string 1 .. 64;
+                                                                INSTANCE_NAME_VALIDATE;
+                                                                help "Routing instance name";
+                                                                cname "jnx_ctrl_vrf";
+                                                        }
+
+                                                        attribute address-range {
+                                                                type ipv4prefix;
+                                                                flag mandatory;
+                                                                help "Data pic local address range";
+                                                                cname "jnx_ctrl_addr_range";
+                                                        }
+                                                }
+                                        }
+
+                                }
+
+                                object data {
+                                        help "Juniper gateway data policy configuration"; 
+                                        flag remove-empty;
+
+                                        object policy {
+
+                                                help "Configure static GRE tunnel policy";
+                                                flag setof list remove-empty; 
+
+                                                attribute session-policy-name {
+                                                        flag identifier nokeyword;
+                                                        type ranged string 1 .. 64;
+                                                        help "Static GRE tunnel policy name";
+                                                        cname "jnx_data_policy_name";
+                                                }
+
+                                                attribute interface-name {
+                                                        type interface-name;
+                                                        flag mandatory;
+                                                        help "Services data-pic interface name";
+                                                        cname "jnx_data_policy_interface";
+                                                }
+
+                                                object session {
+                                                        help "Client session information";
+                                                        flag mandatory;
+
+                                                        attribute client-id {
+                                                                flag mandatory;
+                                                                type string;
+                                                                help "Client ID or IP Address";
+                                                                cname "jnx_data_client_id";
+                                                        }
+
+                                                        attribute client-start-port {
+                                                                flag mandatory;
+                                                                PORT; 
+                                                                help "Client start source port";
+                                                                cname "jnx_data_client_start_port";
+                                                        }
+
+                                                        attribute client-port-range {
+                                                                flag mandatory;
+                                                                 PORT;
+                                                                help "Client source port range";
+                                                                cname "jnx_data_client_port_range";
+                                                        }
+
+                                                        attribute server-id {
+                                                                flag mandatory;
+                                                                type string;
+                                                                help "Server ID or IP Address";
+                                                                cname "jnx_data_server_id";
+                                                        }
+
+                                                        attribute server-port {
+                                                                flag mandatory;
+                                                                PORT;
+                                                                help "Server destination port";
+                                                                cname "jnx_data_server_port";
+                                                        }
+                                                }
+
+                                                object ingress-tunnel {
+                                                        help "Ingress tunnel information";
+                                                        flag mandatory;
+
+                                                        attribute gre-gateway {
+                                                                flag mandatory;
+                                                                type string;
+                                                                help "GRE Gateway ID or IP Address";
+                                                                cname "jnx_data_gre_gateway";
+                                                        }
+
+                                                        attribute ingress-self-ip {
+                                                                flag mandatory;
+                                                                type string;
+                                                                help "Self IP Address";
+                                                                cname "jnx_data_ingress_self_id";
+                                                        }
+
+                                                        attribute routing-instance {
+                                                                flag mandatory;
+                                                                type string;
+                                                                INSTANCE_NAME_VALIDATE;
+                                                                help "Routing instance name";
+                                                                cname "jnx_data_ingress_vrf";
+                                                        }
+
+                                                        attribute start-gre-key {
+                                                                flag mandatory;
+                                                                type uint;
+                                                                help "Start GRE key";
+                                                                cname "jnx_data_gre_key";
+                                                        }
+                                                }
+
+                                                object egress-tunnel {
+                                                        help "Egress tunnel information";
+                                                        flag mandatory;
+
+                                                        attribute egress-self-ip {
+                                                                type string;
+                                                                help "Self IP Address";
+                                                                cname "jnx_data_egress_self_id";
+                                                        }
+
+                                                        attribute ipip-gateway {
+                                                                type string;
+                                                                help "IPIP gateway ID or IP Address";
+                                                                cname "jnx_data_ipip_gateway";
+                                                        }
+
+                                                        attribute routing-instance {
+                                                                flag mandatory;
+                                                                type string;
+                                                                INSTANCE_NAME_VALIDATE; 
+                                                                help "Routing instance name";
+                                                                cname "jnx_data_egress_vrf";
+                                                        }
+                                                }
+                                        }
+
+
+                                }
+                                attribute syslog {
+                                    type toggle;
+                                    help "Configure syslog";
+                                }
+                                object traceoptions {
+                                    help "Trace options for jnx gateway";
+                                    TRACEOPTIONS_FILE;
+                                    object "flag" {
+                                        alias traceflag;
+                                        help "Tracing parameters";
+                                        flag setof list;
+                                        flag oneliner;
+                                        attribute flag-name {
+                                            flag identifier nokeyword;
+                                            type enum uint {
+                                                JNX_GATEWAY_TRACE_OPTIONS;
+                                            }
+                                        }
+                                    }
+                                }
+                        }
+                }
+        }
+}

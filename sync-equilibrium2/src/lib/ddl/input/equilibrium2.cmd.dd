@@ -1,0 +1,43 @@
+/*
+ * $Id: equilibrium2.cmd.dd,v 1.2.86.1 2009-04-16 05:52:00 kdickman Exp $
+ *
+ * equilibrium2.cmd.dd - equilibrium2 process commands
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+ 
+
+#define DNAME_EQUILIBRIUM2_MGMT "equilibrium2-mgmt"
+
+#define EQUILIBRIUM2_MGMT_ACTION \
+  action execute DNAME_EQUILIBRIUM2_MGMT;
+  
+require-names sync-equilibrium2;
+
+command juniper-command {
+
+    command show {
+        command sync {
+            require view;
+            help "Show SDK Your Net Corp. application information";
+            command equilibrium2 {
+                require sync-equilibrium2;
+                help "Equilibrium II application information";
+            
+                command status {
+                    help "Show all status";
+                    EQUILIBRIUM2_MGMT_ACTION;
+                    define DDLAID_SHOW_EQ_STATUS;
+                }
+            }
+        }
+    }
+}
+

@@ -1,0 +1,20 @@
+# $Id: sync-equilibrium-mgmt.manifest 412622 2010-11-25 20:13:29Z builder $
+#
+# Copyright (c) 2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+/set package_id=21 role=Provider_All_Features_Daemon
+#
+#        Name: equilibrium-mgmt
+# Description: SYNC Equilibrium sample load-balancer service
+#        Type: Management daemon
+#     Runs on: Routing Engine
+#
+%TOPDIR%/sbin/equilibrium-mgmt/equilibrium-mgmt store=%INSTALLDIR%/sbin/equilibrium-mgmt mode=555 program_id=1
+%TOPDIR%/lib/odl/xmltags/lib%PROVIDER_PREFIX%-equilibrium-render.so.1 store=opt/lib/render/lib%PROVIDER_PREFIX%-equilibrium-render.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-equilibrium-mgmt-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-equilibrium-mgmt-dd.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-equilibrium-mgmt-actions-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-equilibrium-mgmt-actions-dd.so mode=444
+
+# This one is everything in the package for mgd:
+
+%TOPDIR%/lib/ddl/feature/equilibrium_desc.dml store=opt/lib/dd/%PROVIDER_PREFIX%-equilibrium_desc.dml mode=444

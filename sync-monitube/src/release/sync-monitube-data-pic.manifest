@@ -1,0 +1,12 @@
+# $Id: sync-monitube-data-pic.manifest 346460 2009-11-14 05:06:47Z ssiano $
+#
+# Copyright (c) 2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+#        Name: monitube-data
+# Description: SYNC Monitube sample IPTV monitoring service
+#        Type: Data application
+#     Runs on: MS PIC
+#
+%TOPDIR%/../obj-xlr/sbin/monitube-data/monitube-data store=opt/sdk/sbin/monitube-data mode=555
+%TOPDIR%/etc/monitube.conf store=var/etc/init.dir/monitube.conf mode=444

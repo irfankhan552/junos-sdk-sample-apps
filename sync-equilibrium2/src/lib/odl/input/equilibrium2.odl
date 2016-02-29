@@ -1,0 +1,105 @@
+/* 
+ * $Id: equilibrium2.odl 346460 2009-11-14 05:06:47Z ssiano $
+ * 
+ * equilibrium2.odl
+ *   ODL description for the output of the equilibrium2-mgmt daemon
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+/*
+ * This odl file defines a DTD called equilibrium2.dtd
+ */
+dtd equilibrium2;
+
+tag equilibrium2-status {
+    flag root;
+
+/* Output example:
+
+  Server Group: web-group
+      Address        Number of Sessions
+    64.252.155.6          2
+    64.252.155.7          2
+    64.252.155.8          4
+    64.252.155.9          4
+
+*/
+
+    tag get-status {
+        type string;
+    }
+    format server-group-format {
+        line {
+            field get-status template "\\n    %s";
+        }
+    }
+
+    tag service-info {
+        flag multiple;
+
+        tag service-location {
+            help "The location of the service";
+
+            tag fpc-slot {
+                type int;
+                help "FPC slot number";
+            }
+            tag pic-slot {
+                type int;
+                help "PIC slot number";
+            }
+            format service-location-format {
+                header "--------\\nService on ";
+                line {
+                    field fpc-slot template "FPC %d  ";
+                    field pic-slot template "PIC %d";
+                }
+            }
+        }
+        tag server-group {
+            flag multiple;
+
+            tag server-group-name {
+                type string;
+                help "The server group name";
+                description "The server group name";
+            }
+            format server-group-format {
+                line {
+                    field server-group-name template "\\n    Server Group %s";
+                }
+            }
+
+            tag address-list {
+                help "The list of address";
+                description "The list of address";
+
+                tag address {
+                    type string;
+                    help "An IP address";
+                    description "An IP address";
+                }
+
+                tag session-count {
+                    type int;
+                    help "The number of sessions";
+                    description "The number of sessions";
+                }
+
+                format address-list-format {
+                    header "
+        Address          Number of Sessions\\n";
+                    picture "
+    @<<<<<<<<<<<<<<<       @>>>>>>>>";
+                    line {
+                        field address;
+                        field session-count;
+                    }
+                }
+            }
+        }
+    }
+}
+

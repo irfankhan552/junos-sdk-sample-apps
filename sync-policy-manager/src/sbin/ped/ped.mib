@@ -1,0 +1,169 @@
+--
+-- Policy Enforcement MIB
+--
+-- This code is provided as is by Juniper Networks SDK Developer Support.
+-- It is provided with no warranties or guarantees, and Juniper Networks
+-- will not provide support or maintenance of this code in any fashion.
+-- The code is provided only to help a developer better understand how
+-- the SDK can be used.
+--
+-- Copyright (c) 2007-2008, Juniper Networks, Inc.
+-- All rights reserved.
+--
+-- The contents of this document are subject to change without notice.
+--
+
+JUNIPER-SYNCPE-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE
+        FROM SNMPv2-SMI
+
+    MODULE-COMPLIANCE,
+    OBJECT-GROUP
+        FROM SNMPv2-CONF
+
+    jnxExampleMibRoot
+        FROM JUNIPER-EXPERIMENT-MIB;
+
+
+peMIB MODULE-IDENTITY
+    LAST-UPDATED "200705100000Z" -- May 10 00:00:00 2007 UTC
+    ORGANIZATION "Juniper Networks, Inc."
+    CONTACT-INFO
+            "        Juniper Technical Assistance Center
+                     Juniper Networks, Inc.
+                     1194 N. Mathilda Avenue
+                     Sunnyvale, CA 94089
+                     E-mail: support@juniper.net"
+    DESCRIPTION
+        "The MIB modules for SDK Your Net Corporation Policy Enforcement Daemon."
+
+    ::= { jnxExampleMibRoot 21 }
+
+peNotifications OBJECT IDENTIFIER ::= {peMIB 0}
+
+peDataObjects OBJECT IDENTIFIER ::= { peMIB 1}
+
+--
+-- The peDataObjects group
+--
+--
+
+allInterfaces OBJECT-TYPE
+    SYNTAX      Counter
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "The number of all interfaces in the router."
+    ::= { peDataObjects 1 }
+
+pePolicyTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF pePolicyEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+        "This table contains interfaces and associated policies." 
+    ::= { peDataObjects 2 }
+
+pePolicyEntry OBJECT-TYPE
+    SYNTAX      pePolicyEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "An entry in the pePolicyTable table." 
+    INDEX { peInterfaceName }
+    ::= { pePolicyTable 1 }
+
+pePolicyEntry ::= SEQUENCE {
+    peInterfaceName     DisplayString,
+    peInterfaceAddressFamily    INTEGER,
+    peInputFilter   DisplayString,
+    peOutputFilter  DisplayString,
+    peRoute    Counter
+}
+
+peInterfaceName OBJECT-TYPE
+    SYNTAX      DisplayString (SIZE(0..127))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Interface name."
+    ::= { pePolicyEntry 1 }
+
+peInterfaceAddressFamily OBJECT-TYPE
+    SYNTAX      INTEGER {IPv4(2), IPv6(28)}
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "The address family of the interface."
+    ::= { pePolicyEntry 2 }
+
+peInputFilter OBJECT-TYPE
+    SYNTAX      DisplayString (SIZE(0..127))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "The input filter on the interface."
+    ::= { pePolicyEntry 3 }
+
+peOutputFilter OBJECT-TYPE
+    SYNTAX      DisplayString (SIZE(0..127))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "The output filter on the interface."
+    ::= { pePolicyEntry 4 }
+
+peRoute OBJECT-TYPE
+    SYNTAX      Counter
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "The number of routes on the interface."
+    ::= { pePolicyEntry 5 }
+
+peManagedInterface OBJECT-TYPE
+    SYNTAX      Counter
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "The number of interfaces under management."
+    ::= { peDataObjects 3 }
+
+peNetSnmpVersion OBJECT-TYPE
+    SYNTAX      DisplayString (SIZE(0..127))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Net-SNMP version"
+    ::= { peDataObjects 4 }
+
+pePsdState OBJECT-TYPE
+    SYNTAX      INTEGER {Down(0), Up(1)}
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "The connection to PSD."
+    ::= { peDataObjects 5 }
+
+pePsdTime OBJECT-TYPE
+    SYNTAX      DisplayString (SIZE(0..127))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "The connection up time to PSD."
+    ::= { peDataObjects 6 }
+
+--
+-- pe Notification definitions
+--
+
+pePsdStateNotify NOTIFICATION-TYPE
+    OBJECTS { pePsdState }
+    STATUS  current
+    DESCRIPTION
+        "The trap will be sent when Policy Enforcement Daemon connect/disconnect to Policy Server Daemon."
+    ::= { peNotifications 1 }
+
+END

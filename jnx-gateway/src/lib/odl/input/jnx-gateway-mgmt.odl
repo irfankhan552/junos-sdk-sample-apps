@@ -1,0 +1,606 @@
+/*
+ * $Id: jnx-gateway-mgmt.odl 346460 2009-11-14 05:06:47Z ssiano $
+ *
+ * jnx-gateway.odl - jnx gateway operational command tags
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 1998-2003, 2005-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+dtd junos-jnx-gateway-mgmt;
+
+tag interface-name {
+	help "Name of the services pic logical interface";
+	flag mandatory;
+	type string;
+	formal-name "Interface";
+}
+
+tag jnx-gateway-client-id {
+	help "Client Ip Address";
+	type ipaddr;
+	formal-name "Client Ip Address";
+}
+
+tag jnx-gateway-server-id {
+	help "Server Ip Address";
+	type ipaddr;
+	formal-name "Server Ip Address";
+}
+
+tag jnx-gateway-client-gateway-id {
+	help "GRE Gateway Ip Address";
+	type ipaddr;
+	formal-name "GRE Gateway Ip Address";
+}
+
+tag jnx-gateway-gre-key {
+	help "GRE Key ID";
+	type uint;
+	formal-name "GRE Key ID";
+}
+
+tag jnx-gateway-vrf {
+	help "Routing instance";
+	type string;
+	formal-name "Routing instance";
+}
+
+tag jnx-gateway-ingress-vrf {
+	help "Ingress routing instance";
+	type string;
+	formal-name "Ingress routing instance";
+}
+
+tag jnx-gateway-egress-vrf {
+	help "Egress routing instance";
+	type string;
+	formal-name "Egress routing instance";
+}
+
+tag jnx-gateway-self-id {
+	help "Self Ip Address";
+	type ipaddr;
+	formal-name "Self Ip Address";
+}
+
+tag jnx-gateway-ipip-id {
+	help "IPIP gateway Ip Address";
+	type ipaddr;
+	formal-name "IPIP gateway Ip Address";
+}
+
+tag jnx-gateway-protocol{
+	help "IP protocol";
+	type uint;
+	formal-name "IP protocol";
+}
+
+tag jnx-gateway-src-port {
+	help "Source port";
+	type uint;
+	formal-name "Source port";
+}
+
+tag jnx-gateway-dst-port {
+	help "Destination port";
+	type uint;
+	formal-name  "Destination port";
+}
+
+tag jnx-gateway-user-count {
+	help "User profile count";
+	type uint;
+	formal-name "User profile count";
+}
+
+tag jnx-gateway-user-name {
+	help "User profile";
+	type string;
+	formal-name "User profile";
+}
+
+tag jnx-gateway-user-addr-range {
+	help "User address range";
+	type ipprefix;
+	formal-name "User address range";
+}
+
+tag jnx-gateway-up-time {
+	type string;
+	help "Session up time";
+	formal-name "Session up time";
+}
+
+tag jnx-gateway-active-sesn-count {
+	help "Number of Active GRE sessions";
+	type uint;
+	formal-name "Number of Active GRE sessions";
+}
+
+tag jnx-gateway-sesn-count {
+	help "Number of GRE sessions";
+	type uint;
+	formal-name "Number of GRE sessions";
+}
+
+tag jnx-gateway-ipip-tun-count {
+	help "Number of IPIP Tunnels";
+	formal-name "Numer of IPIP Tunnels";
+	type uint;
+}
+
+tag jnx-gateway-rx-bytes {
+	help "Number of bytes received";
+	formal-name "Number of bytes received";
+	type uint64;
+}
+
+tag jnx-gateway-tx-bytes {
+	help "Number of bytes sent";
+	formal-name "Number of bytes sent";
+	type uint64;
+}
+
+tag jnx-gateway-tx-packets {
+	help "Number of packets sent";
+	formal-name "Number of packets sent";
+	type uint64;
+}
+
+tag jnx-gateway-rx-packets {
+	help "Number of packets received";
+	formal-name "Number of packets received";
+	type uint64;
+}
+
+tag jnx-gateway-cksum-packets {
+	help "Number of packets with checksum error";
+	formal-name "Number of packets with checksum error";
+	type uint64;
+}
+
+tag jnx-gateway-ttl-packets {
+	help "Number of packets with ttl zero";
+	formal-name "Number of packets with ttl zero";
+	type uint64;
+}
+
+tag jnx-gateway-cong-packets {
+	help "Number of packets dropped for congestion";
+	formal-name "Number of packets dropped for congestion";
+	type uint64;
+}
+
+tag jnx-gateway-proto-packets {
+	help "Number of packets dropped for invalid protocol field";
+	formal-name "Number of packets dropped for invalid protocol field";
+	type uint64;
+}
+
+tag jnx-gateway-tunnel-packets {
+	help "Number of packets dropped for non-existent session";
+	formal-name "Number of packets dropped for non-existent session";
+	type uint64;
+}
+
+tag jnx-gateway-pic {
+	tag jnx-gateway-vrf;
+	tag interface-name;
+	tag jnx-gateway-self-id; 
+	format jnx-gateway-pic-format {
+		indent 0;
+		line {
+			field interface-name template "Service PIC Interface:%s";
+		}
+		line {
+			field jnx-gateway-vrf template "Service PIC VRF:%s";
+		}
+		line {
+			field jnx-gateway-self-id template "Service PIC Ip Address:%s";
+		}
+        fmtflag blank-line;
+	}
+}
+
+/* show jnx-gateway gre-tunnel */
+tag jnx-gateway-sesn {
+	tag jnx-gateway-client-id; 
+	tag jnx-gateway-server-id;
+	tag jnx-gateway-protocol;
+	tag jnx-gateway-src-port;
+	tag jnx-gateway-dst-port;
+	tag jnx-gateway-user-name; 
+	tag jnx-gateway-up-time;
+	format jnx-gateway-sesn-format {
+        fmtflag blank-line;
+		indent 4;
+		line {
+			field jnx-gateway-client-id flag leading comma space;
+			field jnx-gateway-server-id flag leading comma space;
+        }
+        line {
+			field jnx-gateway-protocol flag leading comma space;
+			field jnx-gateway-src-port flag leading comma space;
+			field jnx-gateway-dst-port flag leading comma space;
+        }
+        line {
+            field jnx-gateway-user-name flag leading comma space;
+            field jnx-gateway-up-time flag leading comma space;
+        }
+	}
+}
+
+tag jnx-gateway-ingress {
+	tag jnx-gateway-gre-key;
+	tag jnx-gateway-ingress-vrf;
+	tag jnx-gateway-self-id; 
+	tag jnx-gateway-client-gateway-id;
+	tag interface-name;
+	format jnx-gateway-ingress-format {
+		indent 4;
+		line {
+			field jnx-gateway-ingress-vrf flag leading comma space;
+			field jnx-gateway-gre-key flag leading comma space;
+        }
+        line {
+			field jnx-gateway-self-id flag leading comma space;
+			field jnx-gateway-client-gateway-id flag leading comma space;
+        }
+        line {
+			field interface-name flag leading comma space;
+		}
+	}
+}
+
+tag jnx-gateway-egress {
+	tag jnx-gateway-egress-vrf; 
+	tag jnx-gateway-self-id; 
+	tag jnx-gateway-ipip-id; 
+	tag interface-name;
+	format jnx-gateway-egress-format {
+		indent 4;
+		line {
+			field jnx-gateway-egress-vrf flag leading comma space;
+        } 
+        line {
+			field jnx-gateway-self-id flag leading comma space;
+			field jnx-gateway-ipip-id flag leading comma space;
+        }
+        line {
+			field interface-name flag leading comma space;
+		}
+	}
+}
+
+tag jnx-gateway-gre-sesn-header {
+    tag jnx-gateway-vrf;
+    tag jnx-gateway-client-gateway-id;
+	tag jnx-gateway-active-sesn-count;
+	tag jnx-gateway-sesn-count;
+	format jnx-gateway-gre-sesn-header-format {
+        fmtflag blank-line;
+		indent 2;
+		line {
+			field jnx-gateway-vrf flag leading comma space;
+			field jnx-gateway-client-gateway-id flag leading comma space;
+        }
+		line {
+			field jnx-gateway-active-sesn-count flag leading comma space;
+			field jnx-gateway-sesn-count flag leading comma space;
+		}
+	}
+}
+
+/* top level tag */
+tag jnx-gateway-gre-information {
+	flag root multiple;
+	tag jnx-gateway-pic {
+		format jnx-gateway-pic-format;
+	}
+	tag jnx-gateway-gre-tunnel {
+		flag multiple;
+		tag jnx-gateway-gre-sesn-header {
+			format jnx-gateway-gre-sesn-header-format;
+		}
+		tag jnx-gateway-sesn-set {
+			flag multiple;
+			tag jnx-gateway-sesn {
+				format jnx-gateway-sesn-format;
+			}
+			tag jnx-gateway-ingress {
+				format jnx-gateway-ingress-format;
+			}
+			tag jnx-gateway-egress {
+				format jnx-gateway-egress-format;
+			}
+		}
+	}
+}
+
+/* show jnx-sdk-gateway ipip-tunnels */
+tag jnx-gateway-ipip-header {
+    tag jnx-gateway-vrf;
+	tag jnx-gateway-ipip-tun-count;
+	tag jnx-gateway-active-sesn-count;
+	tag jnx-gateway-sesn-count;
+	format jnx-gateway-ipip-header-format {
+        fmtflag blank-line;
+		indent 2;
+		line {
+			field jnx-gateway-vrf flag leading comma space;
+			field jnx-gateway-ipip-tun-count flag leading comma space;
+        }
+        line {
+			field jnx-gateway-active-sesn-count flag leading comma space;
+			field jnx-gateway-sesn-count flag leading comma space;
+		}
+	}
+}
+
+tag jnx-gateway-ipip-tunnel {
+	tag jnx-gateway-vrf;
+	tag jnx-gateway-ipip-id;
+	tag jnx-gateway-active-sesn-count;
+	tag jnx-gateway-sesn-count;
+	format jnx-gateway-ipip-tunnel-format {
+		indent 4;
+		line {
+			field jnx-gateway-vrf flag leading comma space;
+			field jnx-gateway-ipip-id flag leading comma space;
+        }
+        line {
+			field jnx-gateway-active-sesn-count flag leading comma space;
+			field jnx-gateway-sesn-count flag leading comma space;
+		}
+	}
+}
+
+/* top level tag */
+tag jnx-gateway-ipip-information {
+	flag root multiple;
+	tag jnx-gateway-pic {
+		format jnx-gateway-pic-format;
+	}
+	tag jnx-gateway-ipip {
+		flag multiple;
+		tag jnx-gateway-ipip-header {
+			format jnx-gateway-ipip-header-format;
+		}
+		tag jnx-gateway-ipip-tunnel-set {
+			flag multiple;
+			tag jnx-gateway-ipip-tunnel {
+				format jnx-gateway-ipip-tunnel-format;
+			}
+		}
+	}
+}
+
+/* show jnx-gateway user */
+tag jnx-gateway-user {
+	tag jnx-gateway-user-name;
+	tag jnx-gateway-user-addr-range;
+	tag jnx-gateway-egress-vrf;
+	tag jnx-gateway-ipip-id;
+	tag jnx-gateway-active-sesn-count;
+	tag jnx-gateway-sesn-count;
+	format jnx-gateway-user-format {
+		indent 4;
+		line {
+			field jnx-gateway-user-name flag leading comma space;
+			field jnx-gateway-user-addr-range flag leading comma space;
+		}
+		line {
+			field jnx-gateway-egress-vrf flag leading comma space;
+			field jnx-gateway-ipip-id flag leading comma space;
+        }
+        line {
+			field jnx-gateway-active-sesn-count flag leading comma space;
+			field jnx-gateway-sesn-count flag leading comma space;
+		}
+	}
+}
+
+/* top level tag */
+tag jnx-gateway-user-information {
+	flag root multiple;
+    tag jnx-gateway-user-header {
+        tag jnx-gateway-user-count;
+        format jnx-gateway-user-header-format {
+            fmtflag blank-line;
+            indent 2;
+            line {
+                field jnx-gateway-user-count flag leading space;
+            }
+        }
+    }
+    tag jnx-gateway-user-set {
+        tag jnx-gateway-user {
+            flag multiple;
+            format jnx-gateway-user-format;
+        }
+    }
+}
+
+/* show jnx-sdk-gateway statistics */
+tag jnx-gateway-stat-summary {
+	tag interface-name;
+	tag jnx-gateway-vrf;
+	tag jnx-gateway-self-id;
+	tag jnx-gateway-active-sesn-count;
+	tag jnx-gateway-sesn-count;
+	tag jnx-gateway-ipip-tun-count;
+	tag jnx-gateway-tx-bytes;
+	tag jnx-gateway-rx-bytes; 
+	tag jnx-gateway-tx-packets;
+	tag jnx-gateway-rx-packets;
+	tag jnx-gateway-proto-packets;
+	tag jnx-gateway-tunnel-packets;
+	format jnx-gateway-stat-summary-format {
+        fmtflag blank-line;
+        indent 2;
+		line {
+			field interface-name flag leading comma space;
+			field jnx-gateway-vrf flag leading comma space;
+        }
+        line {
+			field jnx-gateway-self-id flag leading comma space;
+			field jnx-gateway-active-sesn-count flag leading comma space;
+        }
+        line {
+			field jnx-gateway-sesn-count flag leading comma space;
+			field jnx-gateway-ipip-tun-count;
+		}
+		line {
+			field jnx-gateway-tx-bytes flag leading comma space;
+			field jnx-gateway-rx-bytes flag leading comma space;
+        }
+        line {
+			field jnx-gateway-tx-packets flag leading comma space;
+			field jnx-gateway-rx-packets flag leading comma space;
+		}
+		line {
+			field jnx-gateway-proto-packets flag leading comma space;
+		}
+		line {
+			field jnx-gateway-tunnel-packets flag leading comma space;
+        }
+	}
+}
+
+tag jnx-gateway-gre-sesn-stat {
+	tag jnx-gateway-client-id;
+	tag jnx-gateway-server-id;
+	tag jnx-gateway-protocol;
+	tag jnx-gateway-src-port;
+	tag jnx-gateway-dst-port;
+	tag jnx-gateway-gre-key;
+	tag jnx-gateway-ingress-vrf;
+	tag jnx-gateway-self-id; 
+	tag jnx-gateway-client-gateway-id;
+	tag interface-name;
+	tag jnx-gateway-tx-bytes;
+	tag jnx-gateway-rx-bytes; 
+	tag jnx-gateway-tx-packets;
+	tag jnx-gateway-rx-packets;
+	tag jnx-gateway-cksum-packets;
+	tag jnx-gateway-ttl-packets;
+	tag jnx-gateway-cong-packets;
+	format jnx-gateway-gre-sesn-stat-format {
+        fmtflag blank-line;
+        indent 2;
+		line {
+			field jnx-gateway-client-id flag leading comma space;
+			field jnx-gateway-server-id flag leading comma space;
+        }
+        line {
+			field jnx-gateway-protocol flag leading comma space;
+			field jnx-gateway-src-port flag leading comma space;
+        }
+        line {
+			field jnx-gateway-dst-port;
+		}
+		line {
+			field jnx-gateway-gre-key flag leading comma space;
+			field jnx-gateway-ingress-vrf flag leading comma space;
+        }
+        line {
+			field jnx-gateway-self-id flag leading comma space;
+			field jnx-gateway-client-gateway-id flag leading comma space;
+        }
+        line {
+			field interface-name;
+		}
+		line {
+			field jnx-gateway-tx-bytes flag leading comma space;
+			field jnx-gateway-rx-bytes flag leading comma space; 
+		}
+		line {
+			field jnx-gateway-tx-packets flag leading comma space;
+			field jnx-gateway-rx-packets flag leading comma space;
+		}
+		line {
+			field jnx-gateway-cksum-packets flag leading comma space;
+			field jnx-gateway-ttl-packets flag leading comma space;
+		}
+		line {
+			field jnx-gateway-cong-packets flag leading comma space;
+		}
+	}
+}
+
+tag jnx-gateway-ipip-tun-stat {
+	tag jnx-gateway-vrf;
+	tag jnx-gateway-self-id;
+	tag jnx-gateway-ipip-id; 
+	tag jnx-gateway-tx-bytes;
+	tag jnx-gateway-rx-bytes; 
+	tag jnx-gateway-tx-packets;
+	tag jnx-gateway-rx-packets;
+	tag jnx-gateway-cksum-packets;
+	tag jnx-gateway-ttl-packets;
+	tag jnx-gateway-cong-packets;
+	format jnx-gateway-ipip-tun-stat-format {
+        fmtflag blank-line;
+        indent 2;
+		line {
+			field jnx-gateway-vrf flag leading comma space;
+        }
+        line {
+			field jnx-gateway-self-id flag leading comma space;
+        }
+        line {
+			field jnx-gateway-ipip-id flag leading comma space; 
+		}
+		line {
+			field jnx-gateway-tx-bytes flag leading comma space;
+			field jnx-gateway-rx-bytes flag leading comma space; 
+		}
+		line {
+			field jnx-gateway-tx-packets flag leading comma space;
+			field jnx-gateway-rx-packets flag leading comma space;
+		}
+		line {
+			field jnx-gateway-cksum-packets flag leading comma space;
+			field jnx-gateway-ttl-packets flag leading comma space;
+        }
+        line {
+			field jnx-gateway-cong-packets flag leading comma space;
+		}
+	}
+}
+
+tag jnx-gateway-stat-gre-sesn-set {
+	flag multiple;
+	tag jnx-gateway-gre-sesn-stat {
+		format jnx-gateway-gre-sesn-stat-format;
+	}
+}
+
+tag jnx-gateway-stat-ipip-tun-set {
+	flag multiple;
+	tag jnx-gateway-ipip-tun-stat {
+		format jnx-gateway-ipip-tun-stat-format;
+	}
+}
+
+tag jnx-gateway-stat-information {
+	flag root multiple;
+	tag jnx-gateway-pic {
+		format jnx-gateway-pic-format;
+	}
+	tag jnx-gateway-stat-summary {
+		format jnx-gateway-stat-summary-format; 
+	}
+	tag jnx-gateway-stat-extensive {
+		tag jnx-gateway-stat-summary;
+		tag jnx-gateway-stat-gre-sesn-set;
+		tag jnx-gateway-stat-ipip-tun-set;
+	}
+}

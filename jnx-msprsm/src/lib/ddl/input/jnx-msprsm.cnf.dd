@@ -1,0 +1,91 @@
+#
+# $Id: jnx-msprsm.cnf.dd,v 1.1 2008-03-05 22:11:36 emil Exp $ 
+#
+# Copyright (c) 2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_JNX_MSPRSMD "jnx-msprsmd"
+
+daemon-names jnx-msprsmd;
+require-names jnx-msprsm;
+
+object juniper-config {
+    flag no-struct;
+
+    object jnx-msprsm {
+        help "MSP Redundant Set Manager configuration";
+        flag remove-empty;
+        notify jnx-msprsmd;
+        define DDLAID_JNX_MSPRSM;
+        require jnx-msprsm;
+    
+        /* This node and its subnodes require jnx-msprsmd to be up
+         and running */
+
+        action enable-process DNAME_JNX_MSPRSMD;
+
+        object traceoptions {
+            help "MSP Redundant Set Manager trace options";
+            require trace;
+            flag remove-empty;
+        
+            TRACEOPTIONS_FILE;
+
+            object "flag" {
+                help "Tracing parameters";
+                flag setof list;
+                flag oneliner;
+                define DDLAID_JNX_MSPRSM_TRACEFLAG;
+
+                attribute flag-name {
+                    flag identifier nokeyword;
+                    help "Target events to be traced";
+                    type enum uint {
+                        choice configuration {
+                            help "Trace configuration events";
+                            define JNX_MSPRSMD_TRACEFLAG_CONFIG;
+                        }
+                        choice ssd {
+                            help "Trace ssd related events";
+                            define JNX_MSPRSMD_TRACEFLAG_SSD;
+                        }
+                        choice kcom {
+                            help "Trace kcom related events";
+                            define JNX_MSPRSMD_TRACEFLAG_KCOM;
+                        }
+                        choice pconn {
+                            help "Trace pconn related events";
+                            define JNX_MSPRSMD_TRACEFLAG_PCONN;
+                        }
+                        choice "all" {
+                            help "Trace everything";
+                            define JNX_MSPRSMD_TRACEFLAG_ALL;
+                        }
+                    }
+                }
+            }
+        }
+        attribute primary-interface {
+            help "Name of the primary logical interface";
+            type interface-name;
+            cname "primary_ifname";
+            flag mandatory;    
+        }
+        attribute secondary-interface {
+            help "Name of the secondary logical interface";
+            type interface-name;
+            cname "secondary_ifname";
+            flag mandatory;
+        }
+        attribute floating-ip {
+            help "The floating control plane ip address";
+            type ipv4addr;
+            cname "floating_ip";
+            flag mandatory;
+        }
+    }
+}

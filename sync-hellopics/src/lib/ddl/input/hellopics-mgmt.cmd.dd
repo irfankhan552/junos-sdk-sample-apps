@@ -1,0 +1,47 @@
+/*
+ * $Id: hellopics-mgmt.cmd.dd,v 1.4 2008-02-29 03:13:14 taoliu Exp $
+ *
+ * hellopics-mgmt.cmd.dd - hellopics mgmt process commands
+ *
+ * James Kelly, June 2007
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+ 
+
+#define DNAME_HELLOPICS_MGMT "hellopics-mgmt"
+
+#define HELLOPICS_MGMT_ACTION \
+  action execute DNAME_HELLOPICS_MGMT;
+
+command juniper-command {
+
+    /*
+     * show sync functionality
+     */
+    command show {
+        command sync {
+            require view;
+            help "Show SDK Your Net Corp. application information";
+            
+            command hellopics {
+                require view;
+                help "Show hellopics information";
+    
+                command statistics {
+                    help "Show statistics";
+                    HELLOPICS_MGMT_ACTION;
+                }
+            }
+        }
+    }
+}
+
+

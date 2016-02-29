@@ -1,0 +1,11 @@
+Please untar the Level-2 policy tar file here. For example, if your tar file is
+policy-acme-1.tgz, untar it so that the directory structure looks as follows:
+
+src/lib/rrdl/input/policy/policy-acme-1/policy-acme-1.crrdl
+src/lib/rdl/input/policy/policy-acme-1/policy-acme-1.crrdl.sig
+
+*** NOTE: ***
+
+This only applies to those that have been given level-2 (provider-specific)
+policy files. If you have not been given such a policy from the 
+Junos SDK development support team, then please ignore this.

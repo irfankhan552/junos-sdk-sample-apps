@@ -1,0 +1,47 @@
+<!--
+$Id: daemon_desc.xml,v 1.4.286.1 2009-08-13 05:06:07 kdickman Exp $
+
+This code is provided as is by Juniper Networks SDK Developer Support.
+It is provided with no warranties or guarantees, and Juniper Networks
+will not provide support or maintenance of this code in any fashion.
+The code is provided only to help a developer better understand how
+the SDK can be used.
+
+Copyright (c) 2007-2008, Juniper Networks, Inc.
+All rights reserved.
+-->
+
+<sdk-bundle>
+  <daemon-table>
+    <default-package>sync-apps</default-package>
+
+    <daemon-entry>
+      <name>helloworldd</name>
+      <ui-name>sync-helloworld-service</ui-name>
+      <binary>INSTALLDIR/sbin/helloworldd</binary>
+      <description>SDK Your Net Corp. Helloworld Example process</description>
+      <system-process-failover acceptable="exclude"/>
+      <optional/>
+      <checkconf/>
+      <mode-protocol-master/>
+      <run-if-configured/>
+      <noversion/>
+    </daemon-entry>
+    
+    <daemon-entry>
+      <name>counterd</name>
+      <ui-name>sync-counter-service</ui-name>
+      <binary>INSTALLDIR/sbin/counterd</binary>
+      <description>SDK Your Net Corp. Counter Example process</description>
+      <system-process-failover acceptable="exclude"/>
+      <optional/>
+      <checkconf/>
+      <mode-protocol-master/>
+      <run-if-configured/>
+      <noversion/>
+    </daemon-entry>
+
+  </daemon-table>
+
+</sdk-bundle>
+

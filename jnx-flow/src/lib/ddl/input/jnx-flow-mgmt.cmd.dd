@@ -1,0 +1,58 @@
+/*
+ * $Id: jnx-flow-mgmt.cmd.dd,v 1.4 2008-02-29 03:13:14 taoliu Exp $ 
+ *
+ * jnx-flow.cmd.dd - jnx flow operational commands
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 1998-2003, 2005-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+#define DNAME_JNX_FLOWD "jnx-flow-mgmt"
+
+require-names jnx-flow-mgmt;
+
+command juniper-command {
+
+	command show {
+
+		command jnx-flow {
+			help "Show juniper sdk jnx-flow service information";
+                        require jnx-flow-mgmt;
+
+			command flow-table {
+				help "Show jnx-flow flow information";
+				xml-name "get-jnx-flow-information";
+				odl-tag  "jnx-flow-information";
+				action execute DNAME_JNX_FLOWD; 
+
+				argument verbose {
+					flag explicit nokeyword;
+
+					choice summary {
+						help "Display summary output";
+					}
+
+					choice extensive {
+						help "Display extensive output";
+					}
+
+					default summary;
+				}
+
+				argument interface-name {
+					type    string;
+					flag    nokeyword;
+					help    "Name of the services pic interface name";
+					default "all";
+					option  "INTERFACE";
+				}
+			}
+		}
+	}
+}

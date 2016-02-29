@@ -1,0 +1,50 @@
+
+#define DNAME_JNX_EXAMPLED "jnx-exampled"
+
+require-names jnx-example;
+
+command juniper-command {
+
+    /*
+     * Example service commands
+     */
+    command show {
+        command jnx-example {
+            require jnx-example;
+            help "Show example service information";
+
+            command statistics {
+                help "Show statistics";
+                action execute DNAME_JNX_EXAMPLED;
+            }
+
+            command data {
+                help "Show example data";
+                action execute DNAME_JNX_EXAMPLED;
+
+                argument level {
+                    flag nokeyword explicit;
+
+                    type enum int {
+                        choice detail {
+                            help "Display detailed data";
+                            value OPT_DETAIL;
+                        }
+                        choice brief {
+                            help "Display brief data (default)";
+                            value OPT_BRIEF;
+                        }
+                    }
+                    default brief;
+                }
+                argument data-name {
+                    flag nokeyword;
+                    help "Example data name";
+                    type string;
+                }
+            }
+        }
+    }
+}
+
+

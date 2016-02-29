@@ -1,0 +1,32 @@
+<!--
+ $Id: ipprobe-manager.xml,v 1.2.290.1 2009-08-13 05:06:07 kdickman Exp $
+
+ This code is provided as is by Juniper Networks SDK Developer Support.
+ It is provided with no warranties or guarantees, and Juniper Networks
+ will not provide support or maintenance of this code in any fashion.
+ The code is provided only to help a developer better understand how
+ the SDK can be used.
+
+ Copyright (c) 2008, Juniper Networks, Inc.
+ All rights reserved.
+-->
+
+<sdk-bundle>
+  <daemon-table>
+    <default-package>sync-ipprobe</default-package>
+
+    <daemon-entry>
+      <name>ipprobe-manager</name>
+      <ui-name>sync-ipprobe-manager</ui-name>
+      <binary>INSTALLDIR/sbin/ipprobe-manager</binary>
+      <description>SDK Your Net Corp. The manager of IP Probe example.</description>
+      <system-process-failover acceptable="exclude"/>
+      <optional/>
+      <checkconf/>
+      <mode-protocol-master/>
+      <noversion/>
+    </daemon-entry>
+
+  </daemon-table>
+</sdk-bundle>
+

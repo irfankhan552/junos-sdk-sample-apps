@@ -1,0 +1,32 @@
+<!-- The package configuration file to be placed in /opt/sdk/pkg -->
+<pkg-config>
+    <!-- Package configuration header - one per config file -->
+    <header>
+        <!-- config file syntax version -->
+        <version>1.0</version>
+        <!-- unique services package (container) name -->
+        <name>sync-equilibrium2-services</name>
+    </header>
+ 
+    <!-- List of plugins -->
+    <plug-in>
+        <!-- unique plugin package name -->
+        <name>sync-equilibrium2-classify</name>
+        <!-- plugin shared object full name (with path) -->
+        <path>/opt/sdk/lib/libequilibrium2-classify.so.1</path>
+        <!-- plugin entry point, this function is called when
+            plugin is loaded src-->
+        <entry>equilibrium2_classify_entry</entry>
+    </plug-in>
+
+    <plug-in>
+        <!-- unique plugin package name -->
+        <name>sync-equilibrium2-balance</name>
+        <!-- plugin shared object full name (with path) -->
+        <path>/opt/sdk/lib/libequilibrium2-balance.so.1</path>
+        <!-- plugin entry point, this function is called when
+            plugin is loaded src-->
+        <entry>equilibrium2_balance_entry</entry>
+    </plug-in>
+</pkg-config>
+

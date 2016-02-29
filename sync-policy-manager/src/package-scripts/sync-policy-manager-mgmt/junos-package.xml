@@ -1,0 +1,16 @@
+<junos-package>
+    <type>SDK_PKG_RE</type>
+    <title>SDK Your Net Corp. Policy Manager Example Management Component</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>SDK Your Net Corp. (phony example co.)</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>
+This package contains the SYNC Policy Manager Management Component</description>
+    <has-ddl/>
+    <has-daemon>psd</has-daemon>
+    <has-daemon>ped</has-daemon>
+    <kill-all-daemons/>
+</junos-package>

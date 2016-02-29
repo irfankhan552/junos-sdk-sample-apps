@@ -1,0 +1,244 @@
+/*
+ * $Id: pe.odl 346460 2009-11-14 05:06:47Z ssiano $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+/*
+ * This odl file defines a DTD called pe.dtd
+ */
+dtd pe;
+
+tag number-entries {
+    type int;
+    help "Number of table entries";
+    description "The number of entries in the managed interfaces table.";        
+}
+
+tag name {
+    type string;
+    help "The interface name";
+    description "The name of a managed interface.";
+    formal-name "Interface";
+}
+
+tag family {
+    type string;
+    help "The interface protocol family";
+    description "The protocol name of a managed interface.";
+    formal-name "Family";
+}
+
+tag input-filter {
+    type string;
+    help "The input filter";
+    description "The name of the interface input filter applied on the interface.";
+    formal-name "Input Filter";
+}
+
+tag output-filter {
+    type string;
+    help "The output filter";
+    description "The name of the interface output filter applied on the interface.";
+    formal-name "Output Filter";
+}
+
+tag pfd-filter {
+    type string;
+    help "The PFD filter";
+    description "If the PFD filter is on.";
+    formal-name "PFD Filter";
+}
+
+tag route-address {
+    type string;
+    help "The route address";
+    formal-name "Route";
+}
+
+tag route-preferences {
+    type int;
+    help "The route preferences";
+    formal-name "Preferences";
+}
+
+tag route-metrics {
+    type int;
+    help "The route metrics";
+    formal-name "Metrics";
+}
+
+tag next-hop-type {
+    type string;
+    help "The next-hop type";
+    formal-name "Next-hop type";
+}
+
+tag next-hop-address {
+    type string;
+    help "The next-hop address";
+    formal-name "Next-hop address";
+}
+
+tag pe {
+    flag root;
+
+    tag number-entries;
+    
+    format pe-format {
+        header "Managed Interfaces\\n";
+        line {
+            field number-entries template "Number of entries: %d\\n";
+        }
+    }
+    
+    tag managed-interfaces {
+    
+        tag managed-interface {
+            flag multiple;
+    
+            tag name;
+            tag family;       
+            tag input-filter;
+            tag output-filter;
+            tag pfd-filter;
+            tag route-address;
+            tag route-preferences;
+            tag route-metrics;
+            tag next-hop-type;
+            tag next-hop-address;
+        }
+        
+        /*
+         * Arrange output in a table
+         */
+        style table {
+            format arrange-in-table-format {
+                header "
+Interface Name  Family  Input Filter  Output Filter  PFD Filter
+";
+                picture "
+@<<<<<<<<<<<<<  @<<<<<  @<<<<<<<<<<<  @<<<<<<<<<<<<  @<<<
+";
+    
+                line {
+                    field name;
+                    field family;
+                    field input-filter {
+                        default " "; /* to fix spacing when missing */
+                    }
+                    field output-filter {
+                        default " "; /* to fix spacing when missing */
+                    }
+                    field pfd-filter {
+                        default "  OFF"; /* used when missing */
+                    }
+                }
+            }
+        }
+    
+        /*
+         * Arrange output by interface
+         */
+        style by-interface {
+            format arrange-by-interface-format {
+                fmtflag blank-line;
+                flag leading colon comma space; 
+                indent 0;
+    
+                line {
+                    field name;
+                    field family;
+                    field pfd-filter {
+                        default "PFD Filter: OFF"; /* used when missing */
+                    }
+                }
+                
+                indent 4;
+                line {
+                    field input-filter;
+                    field output-filter;
+                }
+
+                line {
+                    field route-address;
+                }
+
+                indent 8;
+                line {
+                    field route-preferences;
+                    field route-metrics;
+                    field next-hop-type;
+                    field next-hop-address;
+                }
+            }
+        }
+    }
+}
+
+    
+/*
+ * For grouping by family
+ */
+tag pe-information {
+    flag root;
+
+    tag number-entries;
+    
+    /*
+     * Arrange output by family
+     */
+    format arrange-by-family-format {
+        header "Managed Interfaces\\n"; /* same header */
+        line {
+            field number-entries template "Number of entries: %d\\n";
+        }
+    }
+    
+    tag family-group {
+        flag multiple;
+        help "A group of managed interfaces with a common family";
+
+        tag family;
+        
+        tag interface {
+            flag multiple;
+            help "The interface name with applied filter";
+            
+            tag name;
+            tag input-filter;
+            tag output-filter;
+            tag pfd-filter;
+            
+            format interface-format {
+                flag leading colon comma space; 
+                indent 3;
+                line {
+                    field name;
+                    field pfd-filter {
+                        default "PFD Filter: OFF"; /* used when missing */
+                    }
+                    field input-filter;
+                    field output-filter;
+                }
+            }
+        }
+        
+        format family-group-format {
+            fmtflag blank-line;
+            indent 0;
+            line {
+                field family flag leading colon;
+            }
+        }
+    }
+}
+
+

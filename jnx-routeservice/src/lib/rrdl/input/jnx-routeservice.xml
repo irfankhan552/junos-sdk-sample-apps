@@ -1,0 +1,42 @@
+<!--
+$RCSfile: jnx-routeservice.xml,v $
+$Revision: 1.1.154.2 $
+
+Copyright (c) 2008, Juniper Networks, Inc.
+All rights reserved.
+--> 
+
+<policy>
+    <namespace name="jnx-routeservice"> <!-- The name should match the package 
+	                                name -->
+	<using>provider</using> <!-- This is mandatory -->
+	<generation>1</generation> <!-- This is mandatory -->
+
+	<role name="Provider_Jnx_Daemon">
+	    <has-role>Provider_Daemon</has-role>
+	    <process>
+		<cpu>
+		    <limits>
+			<priority>10</priority>
+		    </limits>
+		</cpu>
+
+		<file>
+		    <limits>
+			<open>32</open>
+		    </limits>
+		</file>
+
+		<memory>
+		    <limits>
+			<data-size>16MB</data-size>
+			<stack-size>8MB</stack-size>
+			<locked-in>8MB</locked-in>
+			<resident-set-size>16MB</resident-set-size>
+		    </limits>
+		</memory>
+	    </process>
+	</role> <!-- End of Role -->
+
+    </namespace>
+</policy>

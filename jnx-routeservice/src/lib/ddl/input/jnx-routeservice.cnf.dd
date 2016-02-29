@@ -1,0 +1,97 @@
+#
+# $Id: jnx-routeservice.cnf.dd,v 1.5 2008-09-10 18:03:35 abhijeet Exp $ 
+#
+# This code is provided as is by Juniper Networks SDK Developer Support.
+# It is provided with no warranties or guarantees, and Juniper Networks
+# will not provide support or maintenance of this code in any fashion.
+# The code is provided only to help a developer better understand how
+# the SDK can be used.
+#
+# Copyright (c) 2007-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_JNX_ROUTESERVICED "jnx-routeserviced"
+
+daemon-names jnx-routeserviced;
+require-names jnx-routeservice;
+
+object juniper-config {
+    flag no-struct;
+
+    object jnx-routeservice {
+        help "Route service configuration";
+        flag remove-empty;
+        notify jnx-routeserviced;
+        define DDLAID_JNX_ROUTESERVICE;
+        require jnx-routeservice;
+	
+        /* This node and its subnodes require jnx-routeserviced to be up
+         and running */
+
+        action enable-process DNAME_JNX_ROUTESERVICED;
+
+        object traceoptions {
+            help "Route service trace options";
+            require trace;
+            flag remove-empty;
+	    
+            TRACEOPTIONS_FILE;
+
+            object "flag" {
+                help "Tracing parameters";
+                flag setof list;
+                flag oneliner;
+                define DDLAID_JNX_ROUTESERVICE_TRACEFLAG;
+
+                attribute flag-name {
+                    flag identifier nokeyword;
+                    help "Target events to be traced";
+                    type enum uint {
+                        choice configuration {
+                            help "Trace configuration events";
+                            define JNX_ROUTESERVICED_TRACEFLAG_CONFIG;
+                        }
+                        choice route-events {
+                            help "Trace route addition/deletion events";
+                            define JNX_ROUTESERVICED_TRACEFLAG_ROUTE_EVENTS;
+                        }
+                        choice "all" {
+                            help "Trace everything";
+                            define JNX_ROUTESERVICED_TRACEFLAG_ALL;
+                        }
+                    }
+                }
+            }
+        }
+        object route-info {
+            help "Route information";
+            flag setof list delta-list;
+
+            attribute destination {
+                flag identifier nokeyword;
+                help "IPv4 address of the destination";
+                type ipv4addr;
+                cname "rt_data_dest";
+            }
+            attribute prefix-len {
+                help "Prefix length";
+                type ranged int 0 .. 32;
+                cname "rt_data_prefixlen";
+            }
+            attribute next-hop {
+                help "Next hop for the destination";
+                type ipv4addr;
+                cname "rt_data_nhop";
+            }
+            attribute interface {
+                help "Name of the logical interface";
+                type interface-name;
+                cname "rt_data_ifname";
+            }
+        }
+    }
+}

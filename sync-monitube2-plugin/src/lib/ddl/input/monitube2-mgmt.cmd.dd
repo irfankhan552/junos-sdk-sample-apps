@@ -1,0 +1,60 @@
+/*
+ * $Id: monitube2-mgmt.cmd.dd,v 1.2.4.2 2009-09-05 03:20:46 ssiano Exp $
+ *
+ * monitube2-mgmt.cmd.dd - monitube mgmt process commands
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2009, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+ 
+
+#define DNAME_MONITUBE2_MGMT "monitube2-mgmt"
+
+#define MONITUBE2_MGMT_ACTION \
+  action execute DNAME_MONITUBE2_MGMT;
+  
+daemon-names monitube2-mgmt;
+require-names sync-monitube2;
+
+command juniper-command {
+
+    command clear {
+        command sync {
+            require clear;
+            help "Clear SDK Your Net Corp. application information";
+            command monitube2 {
+                require sync-monitube2;
+                help "MoniTube2 application information";
+            
+                command statistics {
+                    help "Clear statistics";
+                    MONITUBE2_MGMT_ACTION;
+                    define DDLAID_SHOW_EQ_STATUS;
+                }
+            }
+        }
+    }
+
+    command show {
+        command sync {
+            require view;
+            help "Show SDK Your Net Corp. application information";
+            command monitube2 {
+                require sync-monitube2;
+                help "MoniTube2 application information";
+            
+                command statistics {
+                    help "Show statistics";
+                    MONITUBE2_MGMT_ACTION;
+                    define DDLAID_SHOW_EQ_STATUS;
+                }
+            }
+        }
+    }
+}

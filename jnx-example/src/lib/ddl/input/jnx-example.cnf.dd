@@ -1,0 +1,119 @@
+/*
+ * $Id: jnx-example.cnf.dd,v 1.7.178.1 2009-04-16 05:44:56 kdickman Exp $
+ *
+ * jnx-example.cnf.dd - jnx-example package process configuration
+ *
+ * Copyright (c) 2005-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_JNX_EXAMPLED "jnx-exampled"
+
+daemon-names jnx-exampled;
+require-names jnx-example;
+
+object juniper-config {
+    flag no-aid;
+
+    object jnx-example {
+        help "Example service configuration";
+        flag remove-empty;
+        notify jnx-exampled;
+        define DDLAID_JNX_EXAMPLE;
+        require jnx-example;
+
+        /* This node and its subnodes require jnx-exampled to be up
+           and running */
+        action enable-process DNAME_JNX_EXAMPLED;
+
+        object traceoptions {
+            help "Example service trace options";
+            require trace;
+            flag remove-empty;
+
+            TRACEOPTIONS_FILE;
+
+            TRACEOPTIONS_LEVEL_ATTRIBUTE(/* not hidden */);
+
+            object "flag" {
+                help "Tracing parameters";
+                flag setof list;
+                flag oneliner;
+                define DDLAID_JNX_EXAMPLE_TRACEFLAG;
+
+                attribute flag-name {
+                    flag identifier nokeyword;
+                    type enum uint {
+                        choice init {
+                            help "Trace initialization events";
+                            define JNX_EXAMPLED_TRACEFLAG_INIT;
+                        }
+                        choice configuration {
+                            help "Trace configuration events";
+                            define JNX_EXAMPLED_TRACEFLAG_CONFIG;
+                        }
+                        choice routing-socket {
+                            help "Trace routing socket events";
+                            define JNX_EXAMPLED_TRACEFLAG_RTSOCK;
+                        }
+                        choice "all" {
+                            help "Trace everything";
+                            define JNX_EXAMPLED_TRACEFLAG_ALL;
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
+         * Dummy configuration data
+         */
+        object jnx-example-data {
+            help "Example data entries";
+            flag setof list;
+
+            attribute data-name {
+                flag identifier nokeyword;
+                help "Example data identifier";
+                type ranged string 1..127;
+                cname "ex_data_name";
+            }
+
+            attribute "description" {
+                help "General description of data";
+                type ranged string 1..127;
+                cname "ex_data_desc";
+            }
+
+            attribute "type" {
+                help "Example data type";
+                cname "ex_data_type";
+                type enum uint {
+                    choice none {
+                        help "No type";
+                        define JNX_EXAMPLE_DATA_TYPE_NONE;
+                    }
+                    choice fat {
+                        help "Fat data";
+                        define JNX_EXAMPLE_DATA_TYPE_FAT;
+                    }
+                    choice skinny {
+                        help "Skinny data";
+                        define JNX_EXAMPLE_DATA_TYPE_SKINNY;
+                    }
+                }
+                default skinny;
+            }
+
+            attribute "value" {
+                help "Example data value";
+                type ranged string 1..127;
+                cname "ex_data_value";
+            }
+        }
+    }
+}

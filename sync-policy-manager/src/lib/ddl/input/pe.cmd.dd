@@ -1,0 +1,66 @@
+/*
+ * $Id: pe.cmd.dd,v 1.4 2008-02-29 03:13:14 taoliu Exp $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+#define DNAME_PED "ped"
+
+#define OPT_TABLE       1
+#define OPT_FAMILY      2
+#define OPT_INTERFACE   3
+
+command juniper-command {
+
+    command show {
+    
+        /*
+         * "show sync policy-enforcement managed-interfaces" functionality
+         */
+    
+        command sync {
+            require view;
+            
+            command policy-enforcement {
+                help "Policy Enforcement information";
+
+                command managed-interfaces {
+                    help "Show interfaces with policies";
+                    action execute DNAME_PED;
+    
+                    argument level {
+                        flag nokeyword explicit;
+                        
+                        /*
+                         * flag explicit:
+                         * Use default (of by-interface) when not specified
+                         */
+        
+                        type enum int {
+                            choice by-family {
+                                help "Arrange managed interfaces by family";
+                                value OPT_FAMILY;
+                            }
+                            choice by-interface {
+                                help "Arrange managed interfaces by interface (default)";
+                                value OPT_INTERFACE;
+                            }
+                            choice table {
+                                help "Arrange managed interfaces into a table";
+                                value OPT_TABLE;
+                            }
+                        }
+                        default by-interface;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,243 @@
+/*
+ * $Id: equilibrium-mgmt.cnf.dd,v 1.2 2008-03-07 19:19:00 jamesk Exp $
+ *
+ * equilibrium-mgmt.cnf.dd - equilibrium mgmt process configuration
+ *
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_EQUILIBRIUM_MGMT "equilibrium-mgmt"
+#define EQUILIBRIUM_MGMT_STRLEN 255
+
+daemon-names equilibrium-mgmt;
+require-names sync-equilibrium;
+
+/*
+
+These are the new configuration options created by this DDL:
+
+services {                                              ##existing:
+    service-set service-set-name {
+        interface-service {
+            service-interface ms-x/y/0.z;
+        }
+        extension-service equilibrium-instance-name {  ##new extensions:
+            application application-name {
+                application-address w.x.y.z;            ##mandatory
+                application-port port-number;
+                servers {                               ##mandatory
+                    a.b.c.d;
+                    e.f.g.h;
+                }
+                server-monitor {
+                    server-connection-interval time-in-seconds;
+                    server-connection-timeout time-in-seconds;
+                    server-timeouts-allowed number;
+                    server-down-retry-interval time-in-seconds;
+                }
+                session-timeout time-in-seconds;
+            }
+        }
+    }
+}
+
+*/
+ 
+
+
+object juniper-config {
+    flag no-struct;
+
+    object services {
+        flag no-struct;
+        define DDLAID_SVCS;
+
+        object service-set { /* note: this is a 'setof list' */
+            flag no-struct delta-list; /* added delta-list here */
+            /*
+             * NOTE: DELTA-LIST is needed for lists which we want to walk 
+             * using dax_walk_list with the DAX_WALK_DELTA parameter. 
+             * This way we know about deletes.
+             */ 
+            notify equilibrium-mgmt;
+            define DDLAID_SVCS_SVC_SET;
+
+            object extension-service { /* note: this is a 'setof list' */
+                flag no-struct;
+                define DDLAID_SVCS_SVC_SET_EXT_SERVICE;
+
+                object application {
+                
+                    help "A load-balancing application policy";
+                    flag setof list delta-list;
+                    flag remove-empty;
+                    define DDLAID_SVCS_SVC_SET_EXT_SERVICE_APP;
+                    require sync-equilibrium;
+                                       
+                    /* init the mgmt daemon if this config exists */
+                    action enable-process DNAME_EQUILIBRIUM_MGMT;
+                   
+                    attribute application-name {
+                        help "Load-balancing application name";
+                        flag nokeyword identifier;
+                        type ranged string 1 .. EQUILIBRIUM_MGMT_STRLEN;
+                    }
+                    
+                    attribute application-address {
+                        help "Load-balanced cluster's facade address";
+                        flag mandatory;
+                        type ipv4addr;
+                        
+                        /* this would be nice if just the application-address had to be unique */
+                        /*
+                        must (unique ("services service-set <*> extension-service <*> application <*> application-address $$");
+                        must-message "An application address can only be used by one application";
+                        */
+                        
+                        must (! any "services service-set <*> extension-service <*> application <*> servers $$");
+                        must-message "An application address cannot be used as a server address";
+                    }
+                    
+                    attribute application-port {
+                        help "Load-balanced application's port (default 80)";
+                        type ranged ushort 1 .. 65535;
+                        default 80;
+                    }
+                    
+                    object servers {
+                        help "Servers in cluster for load-balanced application";
+                        flag mandatory;
+                        flag homogeneous setof list autosort delta-list;
+                        max-elements 99;
+                        define DDLAID_APP_SERVERS;
+                        
+                        attribute server {
+                            help "A server address";
+                            flag identifier nokeyword;
+                            type ipv4addr;
+                        }
+                    }
+                    
+                    object server-monitor {
+                        help "Enable and configure the server monitor (probing) for this ";
+                        define DDLAID_APP_SMON;
+                        
+                        attribute server-connection-interval {
+                            help "Connection interval in seconds for normal probes to servers (default 60)";
+                            type ranged ushort 1 .. 3600;
+                            default 60;
+                        }
+                        
+                        attribute server-connection-timeout {
+                            help "Timeout in seconds for normal probes to servers (default 5)";
+                            type ranged ushort 1 .. 60;
+                            default 5;
+                        }
+                        
+                        attribute server-timeouts-allowed {
+                            help "Number of timeouts (and retries) allowed before server is assumed to be down (default is 1 retry)";
+                            type ranged ubyte 0 .. 99;
+                            default 1;
+                        }
+                        
+                        attribute server-down-retry-interval {
+                            help "Connection interval in seconds for probes to servers that are down (default 300)";
+                            type ranged ushort 1 .. 3600;
+                            default 300;
+                        }
+                    }
+                    
+                    attribute session-timeout {
+                        help "HTTP session timeout after which flow state is stale (default 900)";
+                        type ranged ushort 15 .. 3600;
+                        default 900;
+                    }
+                }
+            }
+        }                    
+    }
+    
+    
+    /*
+     * Traceoptions configuration goes somewhere else under /sync:
+     */
+     
+    object sync {
+        help "SDK Your Net Corp. application information";
+        flag remove-empty no-struct;
+        define DDLAID_SYNC;
+        
+        object equilibrium {
+        
+            help "Configure SYNC Equilibrium general options";
+            flag remove-empty no-struct;
+            notify equilibrium-mgmt;
+            define DDLAID_SYNC_EQUILIBRIUM;
+            
+            must (any "services service-set <*> extension-service <*> application <*>");
+            must-message "There must be some load-balancing services configured";
+            
+            /*
+             * Trace options configuration:
+             */
+            object traceoptions {
+                help "Equilibrium trace options";
+                flag remove-empty;
+                require trace sync-equilibrium;
+            
+                /* From trace_include.dd */
+                
+                TRACEOPTIONS_FILE;
+                
+                SYSLOG_ATTRIBUTE;
+                
+                /* Types of trace messages generated by equilibrium-mgmt */
+    
+                object "flag" {
+                    help "Tracing flag parameters";
+                    flag setof list oneliner;
+    
+                    attribute flag-name {
+                        flag identifier nokeyword;
+                        type enum uint {
+                            choice normal {
+                                help "Trace normal events";
+                                define EQUILIBRIUM_TRACEFLAG_NORMAL;
+                            }
+                            choice connection {
+                                help "Trace connection events";
+                                define EQUILIBRIUM_TRACEFLAG_CONNECTION;
+                            }
+                            choice configuration {
+                                help "Trace configuration events";
+                                define EQUILIBRIUM_TRACEFLAG_CONF;
+                            }
+                            choice kcom {
+                                help "Trace Kernel Communication events";
+                                define EQUILIBRIUM_TRACEFLAG_KCOM;
+                            }
+                            choice "all" {
+                                help "Trace everything";
+                                define EQUILIBRIUM_TRACEFLAG_ALL;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+

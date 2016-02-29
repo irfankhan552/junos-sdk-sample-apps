@@ -1,0 +1,14 @@
+# $Id: sync-policy-manager-ctrl-pic.manifest 346460 2009-11-14 05:06:47Z ssiano $
+#
+# Copyright (c) 2007-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+#        Name: cpd
+# Description: SYNC Policy Manager sample: Captive (HTTP server) portal (control component)
+#        Type: Control application (and start up configuration)
+#     Runs on: MS PIC
+#
+%TOPDIR%/../obj-xlr/sbin/cpd/cpd store=opt/sdk/sbin/cpd user=root group=wheel uid=0 gid=0 mode=555
+%TOPDIR%/etc/cpd.conf store=var/etc/init.dir/cpd.conf user=root group=wheel uid=0 gid=0 mode=444
+%TOPDIR%/sbin/cpd/cpd_content/index.html store=var/cpd_content/index.html user=root group=wheel uid=0 gid=0 mode=444
+

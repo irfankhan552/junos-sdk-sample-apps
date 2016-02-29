@@ -1,0 +1,52 @@
+/*
+ * $Id: ipprobe.cmd.dd,v 1.2 2008-02-29 21:42:44 taoliu Exp $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+command juniper-command {
+    command probe {
+        help "Probe";
+
+        action execute spawn "/opt/sbin/ipprobe" {
+            flag no-xml;
+        }
+
+        argument address {
+            help "The target IP address";
+            flag mandatory nokeyword;
+            type ipaddr;
+        }
+
+        argument probe {
+            help "The probe name in configuration";
+            flag mandatory nokeyword;
+            type string;
+        }
+
+        argument print-option {
+            flag nokeyword;
+            type enum string {
+                choice "packet" {
+                    help "Display packet detail";
+                }
+                choice "statistics" {
+                    help "Display statistics detail";
+                }
+                choice "interface" {
+                    help "Display interface statistics";
+                }
+                choice "all" {
+                    help "Display all detail infomation";
+                }
+            }
+        }
+    }
+}

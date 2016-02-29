@@ -1,0 +1,81 @@
+/*
+ * $Id: monitube-mgmt.cmd.dd,v 1.2 2008-05-21 17:44:39 jamesk Exp $
+ *
+ * monitube-mgmt.cmd.dd - monitube mgmt process commands
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+ 
+
+#define DNAME_MONITUBE_MGMT "monitube-mgmt"
+
+#define MONITUBE_MGMT_ACTION \
+  action execute DNAME_MONITUBE_MGMT;
+  
+require-names sync-monitube;
+
+command juniper-command {
+
+    command clear {
+        command sync {
+            require clear;
+            help "Clear SDK Your Net Corp. application information";
+            command monitube {
+                require sync-monitube;
+                help "Monitube application information";
+            
+                command statistics {
+                    help "Clear statistics";
+                    MONITUBE_MGMT_ACTION;
+                    define DDLAID_SHOW_EQ_STATUS;
+                    
+                    argument monitor {
+                        help "Clear statistics for a specific monitor group";
+                        type string;
+                        flag nokeyword;
+                    
+                        /*
+                         * Display only group names that are configured
+                         */
+                        path-reference "sync monitube monitor";
+                    }
+                }
+            }
+        }
+    }
+
+    command show {
+        command sync {
+            require view;
+            help "Show SDK Your Net Corp. application information";
+            command monitube {
+                require sync-monitube;
+                help "Monitube application information";
+            
+                command statistics {
+                    help "Show statistics";
+                    MONITUBE_MGMT_ACTION;
+                    define DDLAID_SHOW_EQ_STATUS;
+                    
+                    argument monitor {
+                        help "Show statistics for a specific monitor group";
+                        type string;
+                        flag nokeyword;
+                    
+                        /*
+                         * Display only group names that are configured
+                         */
+                        path-reference "sync monitube monitor";
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,39 @@
+<!--
+  This code is provided as is by Juniper Networks SDK Developer Support.
+  It is provided with no warranties or guarantees, and Juniper Networks
+  will not provide support or maintenance of this code in any fashion.
+  The code is provided only to help a developer better understand how
+  the SDK can be used.
+
+  Copyright (c) 2007-2008, Juniper Networks, Inc.
+  All rights reserved.
+-->
+<sdk-bundle>
+  <daemon-table>
+    <default-package>jnx-ifinfo</default-package>
+
+    <daemon-entry>
+      <name>jnx-ifinfod</name>
+      <ui-name>jnx-ifinfo-service</ui-name>
+      <description>ifinfo service process</description>
+      <binary>INSTALLDIR/sbin/jnx-ifinfod</binary>
+      <system-process-failover acceptable="exclude"/>
+      <optional/>
+      <checkconf/>
+      <mode-protocol-master/>
+      <run-if-configured/>
+    </daemon-entry>
+
+  </daemon-table>
+
+  <require-table>
+
+    <require-entry>
+      <name>jnx-ifinfo</name>
+      <help>Interface info configuration</help>
+      <configure/>
+      <view/>
+    </require-entry>
+  </require-table>
+
+</sdk-bundle>

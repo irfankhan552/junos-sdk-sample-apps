@@ -1,0 +1,39 @@
+/*
+ * $Id: counter.cmd.dd,v 1.3 2008-02-29 03:13:14 taoliu Exp $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+#define DNAME_COUNTERD "counterd"
+
+#define COUNTERD_ACTION action execute DNAME_COUNTERD;
+
+command juniper-command {
+
+    command show {
+    
+        /*
+         * show sync functionality
+         */
+        command sync {
+            command counter {
+                require view;
+                help "Show counter information";
+    
+                command message {
+                    help "Show the message and counter";
+                    COUNTERD_ACTION;
+                }
+            }
+        }
+    }
+}
+
+

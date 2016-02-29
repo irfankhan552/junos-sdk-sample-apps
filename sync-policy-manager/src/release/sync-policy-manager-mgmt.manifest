@@ -1,0 +1,32 @@
+# $Id: sync-policy-manager-mgmt.manifest 412622 2010-11-25 20:13:29Z builder $
+#
+# Copyright (c) 2007-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+/set package_id=23 role=Provider_All_Features_Daemon
+#
+#        Name: psd
+# Description: SYNC Policy Manager sample: Policy server
+#        Type: Daemon application
+#     Runs on: Routing Engine
+#
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-ps-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-ps-dd.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-ps-actions-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-ps-actions-dd.so mode=444
+%TOPDIR%/sbin/psd/psd store=%INSTALLDIR%/sbin/psd mode=555 program_id=1
+#
+#        Name: ped
+# Description: SYNC Policy Manager sample: Policy enforcement and management component
+#        Type: Daemon application
+#     Runs on: Routing Engine
+# 
+%TOPDIR%/lib/odl/xmltags/lib%PROVIDER_PREFIX%-pe-render.so.1 store=opt/lib/render/lib%PROVIDER_PREFIX%-pe-render.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-pe-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-pe-dd.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-pe-actions-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-pe-actions-dd.so mode=444
+%TOPDIR%/sbin/ped/ped store=%INSTALLDIR%/sbin/ped mode=555 program_id=2
+%TOPDIR%/etc/ped_init_filter.xsl store=var/db/scripts/op/%PROVIDER_PREFIX%-ped_init_filter.xsl mode=444
+%TOPDIR%/etc/ped_update_interface_filter.xsl store=var/db/scripts/op/%PROVIDER_PREFIX%-ped_update_interface_filter.xsl mode=444
+
+# This one is everything in the package for mgd:
+
+%TOPDIR%/lib/ddl/feature/policy_manager.dml store=opt/lib/dd/%PROVIDER_PREFIX%-policy_manager.dml mode=444
+

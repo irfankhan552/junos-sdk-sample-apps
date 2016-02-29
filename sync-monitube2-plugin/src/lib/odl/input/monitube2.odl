@@ -1,0 +1,110 @@
+/* 
+ * $Id: monitube2.odl 346460 2009-11-14 05:06:47Z ssiano $
+ * 
+ * monitube2.odl - ODL description for the output of the monitube-mgmt daemon
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2009, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+/*
+ * This odl file defines a DTD called monitube2.dtd
+ */
+dtd monitube2;
+
+tag monitube-stats {
+    flag root;
+    
+    tag service-set {
+        flag multiple;
+    
+        tag ssid {
+            type int;
+            help "The service set id";
+            description "The service set id";
+        }
+        
+        tag ssname {
+            type string;
+            help "The service set name";
+            description "The service set name";
+        }
+        
+        format sset-format {
+                picture "
+Statistics for service-set @<<<<<<<<<<<<<<<< (id: @<<<<<<<)";
+            line {
+                field ssname;
+                field ssid;
+            }
+        }
+        
+        tag flow-stats {
+            tag flow-stat {
+                flag multiple;
+        
+                tag flow-address {
+                    type string;
+                    help "The flow's IP address";
+                    description "The flow's IP address";
+                }
+                
+                tag last-mdi-stat {
+                    type string;
+                    help "The Last MDI value of the flow";
+                    description "Media delivery index";
+                }
+                
+                tag max-mdi-stat {
+                    type string;
+                    help "The maximum MDI value of the flow";
+                    description "Media delivery index";
+                }
+                
+                tag min-mdi-stat {
+                    type string;
+                    help "The minimum MDI value of the flow";
+                    description "Media delivery index";
+                }
+                
+                tag avg-mdi-stat {
+                    type string;
+                    help "The average MDI value of the flow";
+                    description "Media delivery index";
+                }
+                
+                tag total-loss {
+                    type string;
+                    help "The total MLR over the stats period";
+                    description "The total loss over the stats period";
+                }
+            }
+            
+            format flow-stats-table-format {
+                
+                header "
+Flow to          Last MDI     Max MDI      Min MDI      Average MDI   Total Loss       
+";
+                picture "
+@<<<<<<<<<<<<<<  @<<<<<<<<<<< @<<<<<<<<<<< @<<<<<<<<<<< @<<<<<<<<<<<  @<<<<<<<<<
+";
+    
+                line {
+                    field flow-address;
+                    field last-mdi-stat { default " "; }
+                    field max-mdi-stat { default " "; }
+                    field min-mdi-stat { default " "; }
+                    field avg-mdi-stat { default " "; }
+                    field total-loss { default " "; }
+                }
+            }
+        }
+    }
+}
+

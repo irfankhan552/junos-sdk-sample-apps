@@ -1,0 +1,12 @@
+# $Id: sync-passthru-plugin-pic.manifest 346460 2009-11-14 05:06:47Z ssiano $
+#
+# Copyright (c) 2009, Juniper Networks, Inc.
+# All rights reserved.
+#
+#        Name: passthru-plugin
+# Description: SYNC Passthru Plugin Example
+#        Type: Data plugin
+#     Runs on: MS PIC
+#
+%TOPDIR%/../obj-xlr/lib/passthru-plugin/libpassthru-plugin.so store=opt/sdk/lib/libpassthru-plugin.so.1 mode=444
+%TOPDIR%/etc/passthru-plugin.xml store=opt/sdk/pkg/passthru-plugin.xml mode=444

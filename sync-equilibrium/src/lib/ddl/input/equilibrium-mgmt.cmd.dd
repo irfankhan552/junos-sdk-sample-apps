@@ -1,0 +1,59 @@
+/*
+ * $Id: equilibrium-mgmt.cmd.dd,v 1.2 2008-03-07 19:19:00 jamesk Exp $
+ *
+ * equilibrium-mgmt.cmd.dd - equilibrium mgmt process commands
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+ 
+
+#define DNAME_EQUILIBRIUM_MGMT "equilibrium-mgmt"
+
+#define EQUILIBRIUM_MGMT_ACTION \
+  action execute DNAME_EQUILIBRIUM_MGMT;
+  
+require-names sync-equilibrium;
+
+command juniper-command {
+
+    command show {
+        command sync {
+            require view;
+            help "Show SDK Your Net Corp. application information";
+            command equilibrium {
+                require sync-equilibrium;
+                help "Equilibrium application information";
+            
+                command status {
+                    help "Show all status";
+                    EQUILIBRIUM_MGMT_ACTION;
+                    define DDLAID_SHOW_EQ_STATUS;
+                    
+                    argument service-set {
+                        help "Show all status for a specific service-set";
+                        type string;
+                    
+                        /*
+                         * Display only service-set names that are configured
+                         */
+                        path-reference "services service-set";
+                    }
+                    
+                    argument application {
+                        help "Show the status for a specific application";
+                        type string;
+                    }
+                }
+            }
+        }
+    }
+}
+
+

@@ -1,0 +1,98 @@
+/* 
+ * $Id: equilibrium.odl 346460 2009-11-14 05:06:47Z ssiano $
+ * 
+ * equilibrium.odl - ODL description for the output of the equilibrium-mgmt daemon
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+/*
+ * This odl file defines a DTD called equilibrium.dtd
+ */
+dtd equilibrium;
+
+tag equilibrium-status {
+    flag root;
+    
+    
+/** Output example:
+    
+For application app-name within service set ss-name
+
+  Application servers' status:
+    64.252.155.6 is up
+    64.252.155.7 is up
+    64.252.155.8 is down
+    64.252.155.9 is up
+
+  Current number of cached sessions is 10000.
+    
+**/
+    
+    tag application-status {
+        flag multiple;
+    
+        tag service-set-name {
+            type string;
+            help "The service-set name";
+            description "The service-set name for the application";
+        }
+        
+        tag application-name {
+            type string;
+            help "The application name";
+            description "The load balanced application name";
+        }
+        
+        tag server-list {
+            help "The list of servers";
+            description "Servers of the application";
+            
+            tag server {
+                help "A server";
+                description "A server";
+                
+                tag address {
+                    type string;
+                    help "A server address";
+                    description "A server address";
+                }
+                tag state {
+                    type string;
+                    help "A server state";
+                    description "A server state";
+                }
+            }
+            
+            format server-list-format {
+                header "  Application servers' status:\\n";
+                indent 4;
+                line {
+                    field address template "%s";
+                    field state template " is %s";
+                }
+            }
+        }
+        
+        tag session-count {
+            type int;
+            help "The number of sessions";
+            description "The number of active sessions";
+        }
+    
+        format status-format {
+            header "\\n";
+            indent 0;
+            line {
+                field application-name template "For application %s";
+                field service-set-name template " within service set %s:\\n";
+            }
+            indent 2;
+            line {
+                field session-count template "Current number of cached sessions is %d\\n";
+            }
+        }
+    }
+}
+

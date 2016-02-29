@@ -1,0 +1,284 @@
+/*
+ * $Id: jnx-flow-mgmt.odl 346460 2009-11-14 05:06:47Z ssiano $
+ *
+ * jnx-flow.odl - jnx gateway operational command tags
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 1998-2003, 2005-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+dtd junos-jnx-flow-mgmt;
+
+tag interface-name {
+	help "Name of the services pic interface";
+	flag mandatory;
+	type string;
+	formal-name "Interface";
+}
+
+tag jnx-flow-src-ip {
+	help "Source Ip Address";
+	type ipaddr;
+	formal-name "Source Ip Address";
+}
+
+tag jnx-flow-dest-ip {
+	help "Destination Ip Address";
+	type ipaddr;
+	formal-name "Destination Ip Address";
+}
+
+tag jnx-flow-protocol{
+	help "IP protocol";
+	type uint;
+	formal-name "IP protocol";
+}
+
+tag jnx-flow-src-port {
+	help "Source port";
+	type uint;
+	formal-name "Source port";
+}
+
+tag jnx-flow-dst-port {
+	help "Destination port";
+	type uint;
+	formal-name  "Destination port";
+}
+
+tag jnx-flow-flow-action {
+	help "Flow action";
+	type string;
+	formal-name  "Flow action";
+}
+
+tag jnx-flow-flow-direction {
+	help "Flow direction";
+	type string;
+	formal-name  "Flow direction";
+}
+
+tag jnx-flow-rule-count {
+	help "Jnx-flow rule count";
+	type uint;
+	formal-name "Rule count";
+}
+
+tag jnx-flow-applied-rule-count {
+	help "Jnx-flow applied rule count";
+	type uint;
+	formal-name "Applied rule count";
+}
+
+tag jnx-flow-service-set-count {
+	help "Jnx-flow service set count";
+	type uint;
+	formal-name "Service set count";
+}
+
+tag jnx-flow-service-set-name {
+	help "Service set name";
+	type string;
+	formal-name "Service set name";
+}
+
+tag jnx-flow-up-time {
+	type string;
+	help "Flow up time";
+	formal-name "Flow up time";
+}
+
+tag jnx-flow-sesn-count {
+	help "Number of Flow sessions";
+	type uint;
+	formal-name "Number of Flow sessions";
+}
+
+tag jnx-flow-allow-sesn-count {
+	help "Number of Allow Flow sessions";
+	type uint;
+	formal-name "Number of Allow Flow sessions";
+}
+
+tag jnx-flow-drop-sesn-count {
+	help "Number of Drop Flow sessions";
+	type uint;
+	formal-name "Number of Drop Flow sessions";
+}
+
+tag jnx-flow-active-sesn-count {
+	help "Number of Active Flow sessions";
+	type uint;
+	formal-name "Number of Active Flow sessions";
+}
+
+tag jnx-flow-allow-active-sesn-count {
+	help "Number of Active Allow Flow sessions";
+	type uint;
+	formal-name "Number of Active Allow Flow sessions";
+}
+
+tag jnx-flow-drop-active-sesn-count {
+	help "Number of Active Drop Flow sessions";
+	type uint;
+	formal-name "Number of Active Drop Flow sessions";
+}
+
+tag jnx-flow-dropped-bytes {
+	help "Number of bytes dropped";
+	formal-name "Number of bytes dropped";
+	type uint64;
+}
+
+tag jnx-flow-dropped-packets {
+	help "Number of packets dropped";
+	formal-name "Number of packets dropped";
+	type uint64;
+}
+
+tag jnx-flow-in-bytes {
+	help "Number of in bytes";
+	formal-name "Number of in bytes";
+	type uint64;
+}
+
+tag jnx-flow-allowed-bytes {
+	help "Number of bytes allowed";
+	formal-name "Number of bytes allowed";
+	type uint64;
+}
+
+tag jnx-flow-in-packets {
+	help "Number of in packets";
+	formal-name "Number of in packets";
+	type uint64;
+}
+
+tag jnx-flow-allowed-packets {
+	help "Number of packets allowed";
+	formal-name "Number of packets allowed";
+	type uint64;
+}
+
+tag jnx-flow-pic {
+	tag interface-name;
+	format jnx-flow-pic-format {
+		indent 0;
+		line {
+			field interface-name template "Service PIC Interface:%s";
+		}
+        fmtflag blank-line;
+	}
+}
+
+/* show sdk-jnx-flow statistics */
+tag jnx-flow-flow-table-summary {
+    tag jnx-flow-service-set-count;
+    tag jnx-flow-rule-count; 
+    tag jnx-flow-applied-rule-count; 
+	tag jnx-flow-sesn-count;
+	tag jnx-flow-active-sesn-count;
+    tag jnx-flow-allow-sesn-count;
+	tag jnx-flow-allow-active-sesn-count;
+    tag jnx-flow-drop-sesn-count; 
+	tag jnx-flow-drop-active-sesn-count;
+	format jnx-flow-flow-table-summary-format {
+        fmtflag blank-line;
+        indent 2;
+
+        line {
+            field jnx-flow-service-set-count flag leading comma space;
+            field jnx-flow-rule-count flag leading comma space;
+            field jnx-flow-applied-rule-count  flag leading comma space;
+        }
+
+        line {
+            field jnx-flow-active-sesn-count flag leading comma space;
+            field jnx-flow-sesn-count flag leading comma space;
+        }
+		line {
+			field jnx-flow-allow-active-sesn-count flag leading comma space;
+			field jnx-flow-allow-sesn-count flag leading comma space;
+        }
+		line {
+			field jnx-flow-drop-active-sesn-count flag leading comma space;
+			field jnx-flow-drop-sesn-count flag leading comma space;
+        }
+	}
+}
+
+tag jnx-flow-flow-table-flow-stat {
+    tag jnx-flow-service-set-name;
+    tag jnx-flow-up-time;
+	tag jnx-flow-src-ip;
+	tag jnx-flow-dest-ip;
+	tag jnx-flow-protocol;
+	tag jnx-flow-src-port;
+	tag jnx-flow-dst-port;
+    tag jnx-flow-flow-action; 
+    tag jnx-flow-flow-direction; 
+    tag jnx-flow-in-bytes;
+	tag jnx-flow-allowed-bytes;
+	tag jnx-flow-dropped-bytes; 
+    tag jnx-flow-in-packets;
+	tag jnx-flow-allowed-packets;
+	tag jnx-flow-dropped-packets;
+	format jnx-flow-flow-table-flow-stat-format {
+        fmtflag blank-line;
+        indent 2;
+        line {
+			field jnx-flow-service-set-name flag leading comma space;
+            field jnx-flow-up-time flag leading comma space;
+		}
+		line {
+			field jnx-flow-src-ip flag leading comma space;
+			field jnx-flow-dest-ip flag leading comma space;
+        }
+        line {
+			field jnx-flow-protocol flag leading comma space;
+			field jnx-flow-src-port flag leading comma space;
+			field jnx-flow-dst-port flag leading comma space;
+        }
+        line {
+            field jnx-flow-flow-action flag leading comma space; 
+            field jnx-flow-flow-direction flag leading comma space; 
+        }
+		line {
+			field jnx-flow-in-bytes flag leading comma space;
+			field jnx-flow-allowed-bytes flag leading comma space;
+			field jnx-flow-dropped-bytes flag leading comma space; 
+		}
+		line {
+			field jnx-flow-in-packets flag leading comma space; 
+			field jnx-flow-allowed-packets flag leading comma space;
+			field jnx-flow-dropped-packets flag leading comma space;
+		}
+	}
+}
+
+tag jnx-flow-flow-table-flow-set {
+    flag multiple;
+    tag jnx-flow-flow-table-flow-stat {
+        format jnx-flow-flow-table-flow-stat-format; 
+    }
+}
+
+/* top level operational command tag */
+tag jnx-flow-flow-table-information {
+    flag root multiple;
+    tag jnx-flow-pic {
+        format jnx-flow-pic-format;
+    }
+    tag jnx-flow-flow-table-extensive {
+        tag jnx-flow-flow-table-summary {
+            format jnx-flow-flow-table-summary-format;
+        }
+        tag jnx-flow-flow-table-flow-set;
+    }
+}

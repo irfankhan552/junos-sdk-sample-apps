@@ -1,0 +1,13 @@
+# $Id: jnx-gateway-data-pic.manifest 346460 2009-11-14 05:06:47Z ssiano $
+#
+# Copyright (c) 2006-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+#        Name: jnx-gateway-data
+# Description: Demonstration of an gateway application using the RE and MP SDK
+#        Type: Data application
+#     Runs on: MS PIC
+#
+%TOPDIR%/../obj-xlr/sbin/jnx-gateway-data/jnx-gateway-data store=opt/sdk/sbin/jnx-gateway-data mode=555
+%TOPDIR%/etc/jnx-gateway-data.conf store=/var/etc/init.dir/jnx-gateway-data.conf mode=555
+

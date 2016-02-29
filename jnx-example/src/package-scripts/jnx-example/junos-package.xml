@@ -1,0 +1,15 @@
+<junos-package>
+    <type>SDK_PKG_RE</type>
+    <title>JUNOS Example Daemon</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>Juniper Networks, Inc.</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>
+This package contains the jnx-exampled daemon.</description>
+    <has-ddl/>
+    <has-daemon>jnx-exampled</has-daemon>
+    <kill-all-daemons/>
+</junos-package>

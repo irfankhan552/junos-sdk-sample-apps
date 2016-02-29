@@ -1,0 +1,168 @@
+/*
+ * $Id: ipprobe-mt.cnf.dd,v 1.3.12.2 2009-09-19 18:51:28 dtang Exp $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2009, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_IPPROBE_MT "ipprobe-mt"
+
+daemon-names ipprobe-mt;
+
+object juniper-config {
+    flag no-struct;
+
+    object sync {
+        help "SDK Your Net Corp. application information";
+        flag no-struct;
+        flag remove-empty;
+
+        object ipprobe-mt {
+            help "IP Probe MT information";
+            flag remove-empty;
+            notify DNAME_IPPROBE_MT;
+
+            /* Trace options configuration. */
+            object traceoptions {
+                help "IP Probe MT trace options";
+                require trace;
+                flag remove-empty;
+
+                /* From trace_include.dd */
+                TRACEOPTIONS_FILE;
+                SYSLOG_ATTRIBUTE;
+                TRACEOPTIONS_LEVEL_ATTRIBUTE(hidden internal);
+
+                object "flag" {
+                    help "Tracing flag parameters";
+                    flag setof list;
+                    flag oneliner; /* put name on same line in output */
+
+                    attribute flag-name {
+                        flag identifier nokeyword;
+                        type enum uint {
+                            choice normal {
+                                help "Trace normal events";
+                                define PROBE_TF_NORMAL;
+                            }
+                            choice config {
+                                help "Trace configuration events";
+                                define PROBE_TF_CONFIG;
+                            }
+                            choice manager {
+                                help "Trace probe manager events";
+                                define PROBE_TF_MNGR;
+                            }
+                            choice thread {
+                                help "Trace probe thread events";
+                                define PROBE_TF_THRD;
+                            }
+                            choice responder {
+                                help "Trace probe responder events";
+                                define PROBE_TF_RSPD;
+                            }
+                            choice "all" {
+                                help "Trace everything";
+                                define PROBE_TF_ALL;
+                            }
+                        }
+                    }
+                }
+            }
+
+            object probe-manager {
+                help "IP Probe MT probe manager information";
+                flag remove-empty;
+
+                attribute port {
+                    help "IP Probe MT probe manager TCP port number.";
+                    type ranged ushort 1..65535;
+                    cname "probe_mngr_port";
+                }
+
+            }
+
+            object responder-manager {
+                help "IP Probe MT responder manager information";
+                flag remove-empty;
+
+                attribute port {
+                    help "IP Probe MT responder manager UDP port number.";
+                    type ranged ushort 1..65535;
+                    cname "rspd_mngr_port";
+                }
+
+            }
+
+            object probe {
+                help "The probe parameters";
+                flag remove-empty setof list;
+
+                attribute name {
+                    flag identifier nokeyword;
+                    help "Probe name";
+                    type ranged string 1..63;
+                    cname "probe_name";
+                }
+                attribute protocol {
+                    flag mandatory;
+                    help "IP protocol";
+                    type ranged ubyte 1..255;
+                    cname "probe_protocol";
+                }
+                attribute tos {
+                    help "Type of service";
+                    type ubyte;
+                    cname "probe_tos";
+                }
+                attribute source-port {
+                    help "The source port of UDP";
+                    type ranged ushort 1..65535;
+                    cname "probe_src_port";
+                }
+                attribute destination-port {
+                    help "The destination port of UDP";
+                    type ranged ushort 1..65535;
+                    cname "probe_dst_port";
+                }
+                attribute packet-size {
+                    help "The size of probe packet including IP header";
+                    type ranged ushort 64..1024;
+                    cname "packet_size";
+                }
+                attribute packet-count {
+                    help "The number of probe packets";
+                    type ranged ushort 1..65535;
+                    cname "packet_count";
+                }
+                attribute packet-interval {
+                    help "The interval(ms) between each two probe packets";
+                    type ushort;
+                    cname "packet_interval";
+                }
+            }
+
+            object interface {
+                help "The interface sending and receiving probe packets";
+                flag remove-empty;
+
+                attribute interface-name {
+                    help "The name of the interface";
+                    flag nokeyword;
+                    type ranged string 1..63;
+                    cname "probe_interface";
+                }
+            }
+        }
+    }
+}
+

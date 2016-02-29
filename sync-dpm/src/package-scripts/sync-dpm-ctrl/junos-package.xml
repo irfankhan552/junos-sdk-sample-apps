@@ -1,0 +1,12 @@
+<junos-package>
+    <type>SDK_PKG_CNTR</type>
+    <title>SDK Your Net Corp. Dynamic Policy Manager Example Control Component</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>SDK Your Net Corp. (phony example co.)</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>
+This package contains the SYNC Dynamic Policy Manager Control Component (RE Container)</description>
+</junos-package>

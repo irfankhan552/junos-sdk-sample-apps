@@ -1,0 +1,211 @@
+/*
+ * $Id: ps.cnf.dd,v 1.4 2008-02-29 03:13:14 taoliu Exp $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_PSD "psd"
+
+daemon-names psd;
+
+object juniper-config {
+    flag no-struct;
+
+    object sync {
+        define DDLAID_SYNC;
+        
+        object policy-server {
+            help "Policy Server information";
+            flag remove-empty;
+            notify DNAME_PSD;
+            define DDLAID_SYNC_PS;
+
+            /* init psd daemon if this config exists */
+            action enable-process DNAME_PSD;                       
+            
+            object policy {
+                help "Policy defintion";
+                flag remove-empty setof list;
+                define DDLAID_SYNC_PS_POLICY;
+                
+                attribute policy-name {
+                    flag nokeyword identifier;
+                    help "Policy name";
+                    type string;
+                    cname "policy_name";
+                }
+                
+                attribute interface {
+                    flag mandatory;
+                    help "Interface name matching expression";
+                    type string;
+                    cname "policy_interface_name";
+                }
+
+                attribute family {
+                    flag mandatory;
+                    help "Address family matching expression";
+                    cname "policy_address_family"
+                    type enum ubyte {
+                        choice inet {
+                            help "IPv4";
+                            value 2; /* AF_INET */
+                            define DDL_AF_INET;
+                        }
+                        choice inet6 {
+                            help "IPv6";
+                            value 28;  /* AF_INET6 */
+                            define DDL_AF_INET6;
+                        }
+                    }
+                }
+
+                object filter {
+                    help "Filter to be attached";
+                    flag remove-empty;
+                    define DDLAID_SYNC_PS_POLICY_FILTER;
+                    
+                    attribute input {
+                        type string;
+                        cname "policy_input_filter";
+                        help "Input filter";
+                        must ("firewall filter $$" ||
+                              (".. .. family inet" &&
+                               "firewall family inet filter $$") ||
+                              (".. .. family inet6" &&
+                               "firewall family inet6 filter $$"));
+                        must-message "Filter must exist on this router";
+                        
+                        path-reference "firewall filter; firewall family inet6 filter; firewall family inet filter";
+                    }
+                    
+                    attribute output {
+                        type string;
+                        cname "policy_output_filter";
+                        help "Output filter";
+                        must ("firewall filter $$" ||
+                              (".. .. family inet" &&
+                               "firewall family inet filter $$") ||
+                              (".. .. family inet6" &&
+                               "firewall family inet6 filter $$"));
+                        must-message "Filter must exist on this router";
+
+                        path-reference "firewall filter; firewall family inet6 filter; firewall family inet filter";
+                    }
+                }
+
+                object route {
+                    help "Route defintion";
+                    flag remove-empty setof list;
+                    define DDLAID_SYNC_PS_POLICY_ROUTE;
+
+                    attribute route-address {
+                        flag nokeyword identifier;
+                        help "Route address";
+                        type ipv4prefix-mandatory;
+                        cname "route_address";
+                    }
+                    
+                    attribute metrics {
+                        help "Metrics";
+                        type uint;
+                        cname "metrics";
+                    }
+    
+                    attribute preferences {
+                        help "Preferences";
+                        type uint;
+                        cname "preferences";
+                    }
+    
+                    attribute next-hop-type {
+                        help "Next-hop type";
+                        type enum ubyte {
+                            choice unicast {
+                                help "Unicast";
+                                value 2;
+                                define PSD_NH_TYPE_UNICAST;
+                            }
+                            choice discard {
+                                help "Discard";
+                                value 0;
+                                define PSD_NH_TYPE_DISCARD;
+                            }
+                            choice reject {
+                                help "Reject";
+                                value 1;
+                                define PSD_NH_TYPE_REJECT;
+                            }
+                        }
+                        default unicast;
+                        cname "nh_type";
+                    }
+    
+                    attribute next-hop-address {
+                        help "Next-hop address";
+                        type ipv4addr;
+                        cname "nh_address";
+                        must (!".. next-hop-type discard" &&
+                              !".. next-hop-type reject");
+                        must-message "next-hop-type can only be unicast when next-hop-address is configured";
+                    }
+                }
+            }
+
+            /*
+             * Trace options configuration:
+             */
+            object traceoptions {
+                help "Policy Server Daemon trace options";
+                require trace;
+                flag remove-empty;
+                
+                /* From trace_include.dd */
+    	    
+    	        TRACEOPTIONS_FILE;
+                
+                SYSLOG_ATTRIBUTE;
+                
+                TRACEOPTIONS_LEVEL_ATTRIBUTE(hidden internal);
+    
+                object "flag" {
+                    help "Tracing flag parameters";
+                    flag setof list;
+                    flag oneliner;
+    
+                    attribute flag-name {
+                        flag identifier nokeyword;
+                        type enum uint {
+                            choice normal {
+                                help "Trace normal events";
+                                define PSD_TRACEFLAG_NORMAL;
+                            }
+                            choice configuration {
+                                help "Trace configuration events";
+                                define PSD_TRACEFLAG_CONFIG;
+                            }
+                            choice heartbeat {
+                                help "Trace heartbeat events";
+                                define PSD_TRACEFLAG_HB;
+                            }
+                            choice "all" {
+                                help "Trace everything";
+                                define PSD_TRACEFLAG_ALL;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

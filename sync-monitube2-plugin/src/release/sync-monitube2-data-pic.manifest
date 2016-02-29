@@ -1,0 +1,13 @@
+# $Id: sync-monitube2-data-pic.manifest 346460 2009-11-14 05:06:47Z ssiano $
+#
+# Copyright (c) 2009, Juniper Networks, Inc.
+# All rights reserved.
+#
+#        Name: monitube2-data
+# Description: SYNC Monitube sample IPTV monitoring service
+#        Type: Data application
+#     Runs on: MS PIC
+#
+#%TOPDIR%/../obj-xlr/lib/monitube2-plugin/libmonitube2-plugin.so store=opt/sdk/lib/libmonitube2-plugin.so.1 mode=555 strip=mips
+%TOPDIR%/../obj-xlr/lib/monitube2-plugin/libmonitube2-plugin.so store=opt/sdk/lib/libmonitube2-plugin.so.1 mode=555
+%TOPDIR%/etc/monitube2.xml store=opt/sdk/pkg/monitube2.xml mode=444

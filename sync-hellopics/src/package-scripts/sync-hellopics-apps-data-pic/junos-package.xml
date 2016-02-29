@@ -1,0 +1,12 @@
+<junos-package>
+    <type>SDK_PKG_PIC</type>
+    <title>SDK Your Net Corp. Hellopics Example Dataplane Component</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>SDK Your Net Corp. (phony example co.)</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>
+This package contains the SYNC Hellopics Dataplane Component (MS PIC Container)</description>
+</junos-package>

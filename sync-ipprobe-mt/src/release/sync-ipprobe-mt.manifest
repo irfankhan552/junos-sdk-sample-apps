@@ -1,0 +1,18 @@
+# $Id: sync-ipprobe-mt.manifest 412622 2010-11-25 20:13:29Z builder $
+#
+# Copyright (c) 2009, Juniper Networks, Inc.
+# All rights reserved.
+#
+/set package_id=28 role=Provider_All_Features_Daemon
+#
+#        Name: ipprobe-mt
+# Description: SYNC IP Probe MT sample: raw socket, statistic and authorization demo (receiving component)
+#        Type: Daemon application
+#     Runs on: Routing Engine
+#
+%TOPDIR%/sbin/ipprobe-mt/ipprobe-mt store=%INSTALLDIR%/sbin/ipprobe-mt mode=555 program_id=1
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-ipprobe-mt-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-ipprobe-mt-dd.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-ipprobe-mt-actions-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-ipprobe-mt-actions-dd.so mode=444
+%TOPDIR%/lib/odl/xmltags/lib%PROVIDER_PREFIX%-ipprobe-mt-render.so.1 store=opt/lib/render/lib%PROVIDER_PREFIX%-ipprobe-mt-render.so mode=444
+%TOPDIR%/lib/ddl/feature/ipprobe-mt.dml store=opt/lib/dd/%PROVIDER_PREFIX%-ipprobe-mt.dml mode=444
+

@@ -1,0 +1,48 @@
+/*
+ * $Id: counter.odl 346460 2009-11-14 05:06:47Z ssiano $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+/*
+ * This odl file defines a DTD called counter.dtd
+ */
+dtd counter;
+
+tag counter-messages { /* cannot use the same top-level tag as helloworld */
+    flag root;
+    
+    tag message {
+        type string;
+        help "A small but friendly message";
+        description "The message tag will contain a small but friendly message like: hello world.";
+        formal-name "Message";
+    }
+    
+    tag count {
+        type int;
+        help "Number of times the message has been viewed";
+        description "the count tag will contain the number of times the message has been viewed";
+        formal-name "Times viewed";
+    }
+    
+    format counter-messages-format {
+        header "Current Message and Counter:\\n";
+        indent 2;
+        line {
+            field message flag leading colon;
+        }
+        line {
+            field count flag leading colon;
+        }
+    }
+}
+
+

@@ -1,0 +1,316 @@
+/*
+ * $Id: equilibrium2.cnf.dd,v 1.3 2008-08-21 01:28:21 taoliu Exp $
+ *
+ * equilibrium2.cnf.dd - equilibrium2 configuration
+ *
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+#include "common_include.dd"
+#include "trace_include.dd"
+
+#define DNAME_EQUILIBRIUM2_MGMT "equilibrium2-mgmt"
+#define EQUILIBRIUM2_MGMT_STRLEN 255
+
+daemon-names equilibrium2-mgmt;
+require-names sync-equilibrium2;
+
+object equilibrium2-balance-rule-object {
+    flag delta-list;
+
+    attribute name {
+        help "Service rule name";
+        flag nokeyword identifier;
+        flag mandatory;
+        type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+    }
+
+    object term {
+        help "Term of service rule";
+        flag setof list delta-list;
+        flag remove-empty mandatory;
+
+        attribute name {
+            help "Term name";
+            flag identifier nokeyword;
+            type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+        }
+
+        object from {
+            help "Term matching condition";
+            flag remove-empty;
+
+            attribute service-gate {
+                help "Service gate matching condition";
+                type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+                path-reference "sync equilibrium2 service-gate";
+            }
+
+            attribute except {
+                help "Not this service tyep";
+                type toggle;
+            }
+
+        }
+
+        object then {
+            help "Term action";
+            flag remove-empty;
+
+            choice "action" {
+                attribute accept {
+                    help "Accept the packet";
+                    type toggle;
+                }
+                attribute discard {
+                    help "Discard the packet";
+                    type toggle;
+                }
+                attribute server-group {
+                    help "Server group";
+                    type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+                    path-reference "sync equilibrium2 server-group";
+                }
+            }
+        }
+    }
+}
+
+object equilibrium2-classify-rule-object {
+    flag delta-list;
+
+    attribute name {
+        help "Service rule name";
+        flag nokeyword identifier;
+        flag mandatory;
+        type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+    }
+
+    object term {
+        help "Term of service rule";
+        flag setof list delta-list;
+        flag remove-empty mandatory;
+
+        attribute name {
+            help "Term name";
+            flag identifier nokeyword;
+            type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+        }
+
+        object from {
+            help "Term matching condition";
+            flag remove-empty;
+
+            attribute service-type {
+                help "Service type";
+                type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+                path-reference "sync equilibrium2 service-type";
+            }
+
+            attribute except {
+                help "Not this service gate";
+                type toggle;
+            }
+        }
+
+        object then {
+            help "Term action";
+            flag remove-empty;
+
+            choice "action" {
+                attribute accept {
+                    help "Accept the packet";
+                    type toggle;
+                }
+                attribute discard {
+                    help "Discard the packet";
+                    type toggle;
+                }
+                attribute service-gate {
+                    help "Service gate";
+                    type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+                    path-reference "sync equilibrium2 service-gate";
+                }
+            }
+        }
+    }
+}
+
+object juniper-config {
+    flag no-struct;
+
+    object services {
+        flag no-struct;
+
+        object service-set { /* note: this is a 'setof list' */
+            notify equilibrium2-mgmt;
+
+            object extension-service { /* note: this is a 'setof list' */
+                flag no-struct remove-empty;
+
+                object rule {
+                    help "Equilibrium2 service rule";
+                    flag setof list;
+
+                    attribute name {
+                        help "Rule name";
+                        flag nokeyword identifier;
+                        type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+                        path-reference "sync equilibrium2 balance-rules; sync equilibrium2 classify-rules";
+                    }
+                }
+            }
+        }
+    }
+
+    object sync {
+        help "SDK Your Net Corp. application information";
+        flag no-struct;
+        flag remove-empty;
+
+        object equilibrium2 {
+            help "Configure SYNC Equilibrium II general options";
+            flag remove-empty;
+            notify equilibrium2-mgmt;
+
+            require sync-equilibrium2;
+
+            /* init the mgmt daemon if this config exists */
+            action enable-process DNAME_EQUILIBRIUM2_MGMT;
+
+            object service-gate {
+                help "Service gate";
+                flag setof list;
+                flag homogeneous;
+                flag remove-empty;
+
+                attribute name {
+                    help "Name of service gate";
+                    flag nokeyword identifier;
+                    type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+                }
+                attribute address {
+                    help "Address of service gate";
+                    type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+                }
+            }
+
+            object server-group {
+                help "Server group";
+                flag setof list;
+                flag homogeneous;
+                flag remove-empty;
+
+                attribute name {
+                    help "Name of server group";
+                    flag nokeyword identifier;
+                    type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+                }
+
+                object servers {
+                    help "List of servers";
+                    flag setof list;
+                    flag homogeneous;
+
+                    attribute address {
+                        help "Server address";
+                        flag nokeyword identifier;
+                        type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+                    }
+                }
+            }
+
+            object service-type {
+                help "Service type";
+                flag setof list;
+                flag homogeneous;
+                flag remove-empty;
+
+                attribute name {
+                    help "Name of service type";
+                    flag nokeyword identifier;
+                    type ranged string 1 .. EQUILIBRIUM2_MGMT_STRLEN;
+                }
+
+                attribute port {
+                    help "Port of service";
+                    type ranged ushort 1 .. 65535;
+                }
+            }
+
+            object balance-rules {
+                help "Balance service rules";
+                flag remove-empty;
+
+                attribute rule {
+                    help "Balance service rule";
+                    type setof equilibrium2-balance-rule-object;
+                }
+            }
+
+            object classify-rules {
+                help "Classify service rules";
+                flag remove-empty;
+
+                attribute rule {
+                    help "Classify service rule";
+                    type setof equilibrium2-classify-rule-object;
+                }
+            }
+
+            /*
+             * Trace options configuration:
+             */
+            object traceoptions {
+                help "Equilibrium II trace options";
+                flag remove-empty;
+                require trace sync-equilibrium2;
+
+                /* From trace_include.dd */
+                TRACEOPTIONS_FILE;
+                SYSLOG_ATTRIBUTE;
+
+                /* Types of trace messages generated by equilibrium2-mgmt */
+                object "flag" {
+                    help "Tracing flag parameters";
+                    flag setof list oneliner;
+
+                    attribute flag-name {
+                        flag identifier nokeyword;
+                        type enum uint {
+                            choice normal {
+                                help "Trace normal events";
+                                define EQ2_TRACEFLAG_NORMAL;
+                            }
+                            choice connection {
+                                help "Trace connection events";
+                                define EQ2_TRACEFLAG_CONNECTION;
+                            }
+                            choice configuration {
+                                help "Trace configuration events";
+                                define EQ2_TRACEFLAG_CONF;
+                            }
+                            choice kcom {
+                                help "Trace Kernel Communication events";
+                                define EQ2_TRACEFLAG_KCOM;
+                            }
+                            choice "all" {
+                                help "Trace everything";
+                                define EQ2_TRACEFLAG_ALL;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

@@ -1,0 +1,13 @@
+# $Id: sync-dpm-ctrl-pic.manifest 346460 2009-11-14 05:06:47Z ssiano $
+#
+# Copyright (c) 2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+#        Name: dpm-ctrl
+# Description: SYNC Dynamic Policy Manager sample application
+#        Type: Control application
+#     Runs on: MS PIC
+#
+%TOPDIR%/../obj-xlr/sbin/dpm-ctrl/dpm-ctrl store=opt/sdk/sbin/dpm-ctrl mode=555
+%TOPDIR%/etc/dpm.sh store=opt/sdk/sbin/dpm.sh mode=555
+%TOPDIR%/etc/dpm.conf store=var/etc/init.dir/dpm.conf mode=444

@@ -1,0 +1,20 @@
+# $Id: sync-dpm-mgmt.manifest 412622 2010-11-25 20:13:29Z builder $
+#
+# Copyright (c) 2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+/set package_id=18 role=Provider_All_Features_Daemon
+#
+#        Name: dpm-mgmt
+# Description: SYNC Dynamic Policy Manager sample application
+#        Type: Management daemon
+#     Runs on: Routing Engine
+#
+%TOPDIR%/sbin/dpm-mgmt/dpm-mgmt store=%INSTALLDIR%/sbin/dpm-mgmt mode=555 program_id=1
+%TOPDIR%/lib/odl/xmltags/lib%PROVIDER_PREFIX%-dpm-render.so.1 store=opt/lib/render/lib%PROVIDER_PREFIX%-dpm-render.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-dpm-mgmt-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-dpm-mgmt-dd.so mode=444
+%TOPDIR%/lib/ddl/feature/lib%PROVIDER_PREFIX%-dpm-mgmt-actions-dd.so.1 store=opt/lib/dd/lib%PROVIDER_PREFIX%-dpm-mgmt-actions-dd.so mode=444
+
+# This one is everything in the package for mgd:
+
+%TOPDIR%/lib/ddl/feature/dpm_desc.dml store=opt/lib/dd/%PROVIDER_PREFIX%-dpm_desc.dml mode=444

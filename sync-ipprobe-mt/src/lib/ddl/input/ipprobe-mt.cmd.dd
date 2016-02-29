@@ -1,0 +1,74 @@
+/*
+ * $Id: ipprobe-mt.cmd.dd,v 1.3.12.2 2009-09-19 18:51:28 dtang Exp $
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2009, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+
+#define IPPROBE_MT_ACTION \
+        action execute "ipprobe-mt";
+
+command juniper-command {
+    command request {
+        command sync {
+            command ipprobe-mt {
+                command start {
+                    help "Start the probe";
+                    IPPROBE_MT_ACTION
+
+                    argument probe {
+                        help "The probe name in configuration";
+                        flag mandatory;
+                        type string;
+                    }
+                    argument destination {
+                        help "The target IP address";
+                        flag mandatory;
+                        type ipaddr;
+                    }
+                }
+                command stop {
+                    help "Stop the probe";
+                    IPPROBE_MT_ACTION
+
+                    argument probe {
+                        help "The probe name in configuration";
+                        flag mandatory nokeyword;
+                        type string;
+                    }
+                }
+                command clear {
+                    help "Clear probe result";
+                    IPPROBE_MT_ACTION
+
+                    argument probe {
+                        help "The probe name in configuration";
+                        flag mandatory nokeyword;
+                        type string;
+                    }
+                }
+            }
+        }
+    }
+    command show {
+        command sync{
+            command ipprobe-mt {
+                help "Show probe result";
+                IPPROBE_MT_ACTION
+
+                argument probe {
+                    help "The probe name in configuration";
+                    flag mandatory nokeyword;
+                    type string;
+                }
+            }
+        }
+    }
+}
+

@@ -1,0 +1,96 @@
+/*
+ * $Id: jnx-cc-routeservice.odl 346460 2009-11-14 05:06:47Z ssiano $ 
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2007-2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+ 
+/*
+ * This odl file defines a DTD called junos-jnx-routeservice.dtd
+ */
+
+#define DNAME_JNX_ROUTESERVICED "jnx-routeserviced"
+dtd junos-jnx-routeservice;
+
+/*
+ * Create tags for summary information
+ */
+tag jnx-routeservice-summary-information {
+    flag root;
+
+    tag jnx-routeservice-route-info {
+        flag multiple;
+
+        tag jnx-routeservice-route-info-interface {
+            type string;
+            formal-name "Via";
+            help "Name of interface";
+        }
+
+        tag jnx-routeservice-route-info-destination {
+            type string;
+            formal-name "Destination";
+            help "Destination address";
+        }
+
+        tag jnx-routeservice-route-info-next-hop {
+            type string; 
+            formal-name "Next hop";
+            help "Next hop for destination";
+        }
+        tag jnx-routeservice-route-info-status {
+            type string;
+            formal-name "Status";
+            help "Status of the add request";
+        }
+    }
+
+    style detail {
+        format jnx-routeservice-route-info-detail-format {
+            fmtflag blank-line;
+            flag leading colon comma space; 
+
+            line {
+                field jnx-routeservice-route-info-destination;
+            }
+
+            indent 2;
+            line {
+                field jnx-routeservice-route-info-next-hop;
+            }
+            indent 2;
+            line {
+                field jnx-routeservice-route-info-interface;
+            }
+            indent 2;
+            line {
+                field jnx-routeservice-route-info-status;
+            }
+        }
+    }
+
+    style brief {
+        format jnx-routeservice-route-info-brief-format {
+            header "
+ 
+Destination       Next-hop      Via interface    Status
+";          
+            picture "
+@<<<<<<<<<<<<<<<< @<<<<<<<<<<<< @<<<<<<<<<<<<<<< @<<<<<<<<<<<<<<<<<<<<<<<<<<
+";
+
+            line {
+                field jnx-routeservice-route-info-destination;
+                field jnx-routeservice-route-info-next-hop;
+                field jnx-routeservice-route-info-interface;
+                field jnx-routeservice-route-info-status;
+            }
+        }
+    }
+}

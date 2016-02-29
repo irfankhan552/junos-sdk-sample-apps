@@ -1,0 +1,37 @@
+/*
+ * $Id: dpm-mgmt.cmd.dd,v 1.1 2008-06-19 19:06:48 jamesk Exp $
+ *
+ * dpm-mgmt.cmd.dd - DPM's mgmt process commands
+ *
+ * This code is provided as is by Juniper Networks SDK Developer Support.
+ * It is provided with no warranties or guarantees, and Juniper Networks
+ * will not provide support or maintenance of this code in any fashion.
+ * The code is provided only to help a developer better understand how
+ * the SDK can be used.
+ *
+ * Copyright (c) 2008, Juniper Networks, Inc.
+ * All rights reserved.
+ */
+ 
+
+#define DNAME_DPM_MGMT "dpm-mgmt"
+
+command juniper-command {
+
+    command show {
+        command sync {
+            require view;
+            help "Show SDK Your Net Corp. application information";
+            
+            command dpm {
+                help "Dynamic Policy Manager application information";
+            
+                command subscribers {
+                    help "Show subscribers currently logged in";
+                    action execute DNAME_DPM_MGMT;
+                    define DDLAID_SHOW_DPM_SUBS;
+                }
+            }
+        }
+    }
+}

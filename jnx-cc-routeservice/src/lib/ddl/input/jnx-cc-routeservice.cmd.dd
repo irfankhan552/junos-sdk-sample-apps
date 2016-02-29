@@ -1,0 +1,51 @@
+#
+# $Id: jnx-cc-routeservice.cmd.dd,v 1.3 2008-02-29 03:13:14 taoliu Exp $ 
+#
+# This code is provided as is by Juniper Networks SDK Developer Support.
+# It is provided with no warranties or guarantees, and Juniper Networks
+# will not provide support or maintenance of this code in any fashion.
+# The code is provided only to help a developer better understand how
+# the SDK can be used.
+#
+# Copyright (c) 2007-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+
+#define DNAME_JNX_ROUTESERVICED "jnx-routeserviced"
+
+require-names jnx-routeservice;
+
+command juniper-command {
+
+    /*
+     * Route service commands
+     */
+    command show {
+        command jnx-routeservice {
+            require jnx-routeservice;
+            help "Show route service information";
+
+            command summary {
+                help "Show added routes";
+                action execute DNAME_JNX_ROUTESERVICED;
+
+                argument level {
+                    flag nokeyword explicit;
+                    help "Level of detail to display"
+
+                    type enum int {
+                        choice detail {
+                            help "Display detailed data";
+                            value OPT_DETAIL;
+                        }
+                        choice brief {
+                            help "Display brief data";
+                            value OPT_BRIEF;
+                        }
+                    }
+                    default brief;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+<junos-package>
+    <type>SDK_PKG_RE</type>
+    <title>SDK Your Net Corp. Example Application</title>
+    <copyright>
+	<year>%COPYRIGHT%</year>
+	<holder>SDK Your Net Corp. (phony example co.)</holder>
+	<reserve-rights/>
+    </copyright>
+    <release>%RELEASE%</release>
+    <description>
+This package contains SYNC daemons.</description>
+    <has-ddl/>
+    <has-daemon>helloworldd</has-daemon>
+    <has-daemon>counterd</has-daemon>
+    <kill-all-daemons/>
+</junos-package>
